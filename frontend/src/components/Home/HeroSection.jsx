@@ -24,7 +24,7 @@ export default function HeroSection() {
           </button>
         </div>
       </div>
-      <div className="hidden md:flex overflow-hidden rounded-lg mx-auto w-full sm:w-3/4 lg:w-1/3 max-h-100 shadow-xl floating">
+      <div className=" overflow-hidden rounded-lg mx-auto w-full sm:w-3/4 lg:w-1/3 max-h-100 shadow-xl floating">
         <img
           src="/images/Home/Hero.png"
           alt="Hero"
