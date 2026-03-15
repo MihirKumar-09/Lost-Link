@@ -2,6 +2,7 @@ import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
 import RecentReport from "./RecentReport";
 import HowWork from "./HowWork";
+import SafetySection from "./SafetySection";
 export default function HomePage() {
   return (
     <>
@@ -9,6 +10,7 @@ export default function HomePage() {
       <HeroSection />
       <RecentReport />
       <HowWork />
+      <SafetySection />
     </>
   );
 }
