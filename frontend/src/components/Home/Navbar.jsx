@@ -5,6 +5,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav
+      id="home"
       className="w-full border border-red-100 drop-shadow-xs px-3 sm:px-4 md:px-6"
       style={{ background: "#F7F8FA" }}
     >

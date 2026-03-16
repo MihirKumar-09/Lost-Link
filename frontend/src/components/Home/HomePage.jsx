@@ -5,6 +5,7 @@ import HowWork from "./HowWork";
 import SafetySection from "./SafetySection";
 import SuccessStories from "./SuccessStories";
 import Community from "./Community";
+import Footer from "../Footer.jsx";
 export default function HomePage() {
   return (
     <>
@@ -15,6 +16,7 @@ export default function HomePage() {
       <SafetySection />
       <SuccessStories />
       <Community />
+      <Footer />
     </>
   );
 }
