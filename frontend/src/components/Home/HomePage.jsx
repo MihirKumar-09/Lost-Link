@@ -3,6 +3,7 @@ import HeroSection from "./HeroSection";
 import RecentReport from "./RecentReport";
 import HowWork from "./HowWork";
 import SafetySection from "./SafetySection";
+import SuccessStories from "./SuccessStories";
 export default function HomePage() {
   return (
     <>
@@ -11,6 +12,7 @@ export default function HomePage() {
       <RecentReport />
       <HowWork />
       <SafetySection />
+      <SuccessStories />
     </>
   );
 }

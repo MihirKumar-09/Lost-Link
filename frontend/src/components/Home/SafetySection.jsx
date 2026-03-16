@@ -13,7 +13,7 @@ export default function SafetySection() {
         We've Lost Link with security features to ensure every reunion is safe.
       </p>
 
-      <div className="flex justify-between gap-4 md:gap-8 mt-10">
+      <div className="flex justify-between flex-col md:flex-row gap-4 md:gap-8 mt-10">
         <div
           className="border border-white/10 p-6 rounded-2xl shadow-xl"
           style={{ backgroundColor: "#162033" }}
