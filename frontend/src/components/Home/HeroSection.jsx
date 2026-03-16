@@ -8,7 +8,7 @@ export default function HeroSection() {
         <h1 className="text-black font-bold text-3xl md:text-5xl mb-2">
           Lost Something?
         </h1>
-        <h1 className="text-blue-600 font-bold text-3xl md:text-5xl">
+        <h1 className="text-3xl md:text-5xl font-bold bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
           Let the Community Help You.
         </h1>
         <p className="text-gray-600 mt-3 mb-3" style={{ fontFamily: "revert" }}>

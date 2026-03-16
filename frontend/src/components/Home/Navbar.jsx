@@ -5,8 +5,8 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav
-      className="w-full 
-     bg-white border border-red-100 drop-shadow-xs px-3 sm:px-4 md:px-6"
+      className="w-full border border-red-100 drop-shadow-xs px-3 sm:px-4 md:px-6"
+      style={{ background: "#F7F8FA" }}
     >
       {/* Main Container */}
       <div className="flex justify-between items-center">

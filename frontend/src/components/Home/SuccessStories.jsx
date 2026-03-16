@@ -35,7 +35,7 @@ export default function SuccessStories() {
         {stories.map((story, key) => (
           <div
             key={key}
-            className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300"
+            className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300"
           >
             <div className="flex items-center gap-4">
               <span className="w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden shrink-0">
