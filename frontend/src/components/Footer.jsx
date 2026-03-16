@@ -6,7 +6,7 @@ export default function Footer() {
       className="px-3 sm:px-5 md:px-12 pt-20 flex gap-10 flex-wrap justify-between text-white"
       style={{ background: "#0F172A" }}
     >
-      <div className="flex gap-10 flex-wrap justify-between">
+      <div className="flex gap-10 flex-wrap flex-col md:flex-row justify-between">
         <div className="flex-1 flex flex-col gap-3 min-w-37.5">
           <a href="/">
             <img
@@ -20,7 +20,7 @@ export default function Footer() {
             items through honestly, technology, and trust
           </p>
         </div>
-        <div className="flex-1 min-w-30 ml-10">
+        <div className="flex-1 min-w-30 ">
           <h5 className="text-md font-medium mb-4">Quick Links</h5>
           <ul>
             <a href="#">
