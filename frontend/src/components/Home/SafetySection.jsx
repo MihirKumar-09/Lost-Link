@@ -10,7 +10,7 @@ export default function SafetySection() {
         Your Safety is Our Priority
       </h1>
       <p className="text-sm md:text-base text-gray-400 text-center">
-        We've TraceIt with security features to ensure every reunion is safe.
+        We've Lost Link with security features to ensure every reunion is safe.
       </p>
 
       <div className="flex justify-between gap-4 md:gap-8 mt-10">

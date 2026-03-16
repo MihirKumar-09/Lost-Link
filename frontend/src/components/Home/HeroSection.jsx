@@ -12,7 +12,7 @@ export default function HeroSection() {
           Let the Community Help You.
         </h1>
         <p className="text-gray-600 mt-3 mb-3" style={{ fontFamily: "revert" }}>
-          TraceIt connects people who have lost precious belonging with honest
+          Lost Link connects people who have lost precious belonging with honest
           finder in there neighborhood. Safe, secure, and community-driven.
         </p>
         <div className="flex  flex-col md:flex-row gap-3 md:gap-6">
