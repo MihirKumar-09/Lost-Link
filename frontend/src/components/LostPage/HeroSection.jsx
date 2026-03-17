@@ -23,9 +23,12 @@ export default function HeroSection() {
           community-driven
         </p>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 flex-nowrap mt-5 mb-5">
-          <button className="flex gap-2 bg-orange-500 text-white p-3 rounded-xl font-medium cursor-pointer">
-            <CirclePlus /> <span>Report Lost Item</span>
-          </button>
+          <Link to="/lost-item-form">
+            <button className="flex gap-2 bg-orange-500 text-white p-3 rounded-xl font-medium cursor-pointer">
+              <CirclePlus /> <span>Report Lost Item</span>
+            </button>
+          </Link>
+
           <Link to="/found-item">
             <button className="bg-white p-3 rounded-xl font-medium cursor-pointer">
               Browse Found Items
