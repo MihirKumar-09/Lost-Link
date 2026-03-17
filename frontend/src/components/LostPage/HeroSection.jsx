@@ -1,4 +1,5 @@
 import { CirclePlus } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function HeroSection() {
   return (
@@ -25,9 +26,11 @@ export default function HeroSection() {
           <button className="flex gap-2 bg-orange-500 text-white p-3 rounded-xl font-medium cursor-pointer">
             <CirclePlus /> <span>Report Lost Item</span>
           </button>
-          <button className="bg-white p-3 rounded-xl font-medium cursor-pointer">
-            Browse Found Items
-          </button>
+          <Link to="/found-item">
+            <button className="bg-white p-3 rounded-xl font-medium cursor-pointer">
+              Browse Found Items
+            </button>
+          </Link>
         </div>
       </div>
     </section>

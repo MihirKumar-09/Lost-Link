@@ -22,9 +22,11 @@ export default function HeroSection() {
               Report Lost Item
             </button>
           </Link>
-          <button className="bg-white text-black font-medium text-sm border border-blue-200 w-42 px-3 py-3 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white transition">
-            I Found Something
-          </button>
+          <Link to="/found-item">
+            <button className="bg-white text-black font-medium text-sm border border-gray-300 w-42 px-3 py-3 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white transition">
+              I Found Something
+            </button>
+          </Link>
         </div>
       </div>
       <div className="overflow-hidden mt-5 md:mt-0 rounded-lg mx-auto w-full sm:w-3/4 lg:w-1/3 shadow-xl floating">
