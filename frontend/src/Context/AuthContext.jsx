@@ -6,7 +6,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 Fetch logged-in user on app load
+  //!Fetch logged-in user on app load
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
     fetchUser();
   }, []);
 
-  // 🔥 Logout function
+  //! Logout function
   const logout = async () => {
     try {
       await fetch("http://localhost:8080/auth/logout", {
@@ -50,5 +50,4 @@ export function AuthProvider({ children }) {
   );
 }
 
-// Custom hook
 export const useAuth = () => useContext(AuthContext);

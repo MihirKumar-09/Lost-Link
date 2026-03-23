@@ -6,7 +6,7 @@ import { useAuth } from "../../Context/AuthContext";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, setUser } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <nav
@@ -25,26 +25,23 @@ export default function Navbar() {
         {/* Desktop */}
         <div className="hidden md:flex gap-6">
           {user ? (
-            <>
+            <div className="flex items-center gap-6">
               <span className="font-medium">Hi, {user.name}</span>
-              <Button
-                onClick={async () => {
-                  await fetch("http://localhost:8080/auth/logout", {
-                    credentials: "include",
-                  });
-                  setUser(null);
-                }}
-              >
+              <Button className="cursor-pointer!" onClick={logout}>
                 Logout
               </Button>
-            </>
+            </div>
           ) : (
             <>
               <Link to="/signIn">
-                <Button variant="outline">Login</Button>
+                <Button className="cursor-pointer!" variant="outline">
+                  Login
+                </Button>
               </Link>
               <Link to="/signUp">
-                <Button variant="solid">Sign Up</Button>
+                <Button className="cursor-pointer!" variant="solid">
+                  Sign Up
+                </Button>
               </Link>
             </>
           )}
@@ -66,12 +63,7 @@ export default function Navbar() {
             <>
               <span className="text-lg">Hi, {user.name}</span>
               <button
-                onClick={async () => {
-                  await fetch("http://localhost:8080/auth/logout", {
-                    credentials: "include",
-                  });
-                  setUser(null);
-                }}
+                onClick={logout}
                 className="w-full bg-red-500 text-white p-2 rounded-md"
               >
                 Logout
