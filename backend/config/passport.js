@@ -23,19 +23,25 @@ passport.deserializeUser(async (id, done) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:8080/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await User.findOne({ googleId: profile.id });
+        let user = await User.findOne({
+          $or: [
+            { googleId: profile.id },
+            { email: profile.emails?.[0]?.value },
+          ],
+        });
+        console.log("Google Profile:", profile);
         if (!user) {
           user = await User.create({
             googleId: profile.id,
             name: profile.displayName,
-            email: profile.emails[0].value,
-            avatar: profile.photos[0].value,
+            email: profile.emails[0]?.value || "",
+            avatar: profile.photos[0]?.value || "",
           });
         }
         return done(null, user); //Only user no token

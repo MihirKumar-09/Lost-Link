@@ -1,5 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
+import session from "express-session";
+import passport from "passport";
+import "./config/passport.js";
 import cors from "cors";
 const app = express();
 import dotenv from "dotenv";
@@ -21,18 +24,29 @@ app.use(
     credentials: true,
   }),
 );
+
 app.use(express.json());
+
+//! SESSION FIRST
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+//!=========PASSPORT AFTER SESSION=========
+app.use(passport.initialize());
+app.use(passport.session());
 
 //!=========IMPORT ALL ROUTES=========
 import ReportRoute from "./routes/reportRoute.js";
+import AuthRoute from "./routes/auth.js";
 
 //!=========REGISTER WITH SERVER=========
 app.use("/reports", ReportRoute);
-
-app.listen(PORT, () => {
-  console.log(`Server listen on PORT ${PORT}`);
-  connectDB();
-});
+app.use("/auth", AuthRoute);
 
 const connectDB = async () => {
   try {
@@ -42,3 +56,8 @@ const connectDB = async () => {
     console.log("Failed to connect ", err);
   }
 };
+
+app.listen(PORT, () => {
+  console.log(`Server listen on PORT ${PORT}`);
+  connectDB();
+});
