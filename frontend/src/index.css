@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "@radix-ui/themes/styles.css";
+
+body {
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+/*! Floating hero image(Home page) */
+.floating {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/*! Hide scroll bar in lost page category section */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
