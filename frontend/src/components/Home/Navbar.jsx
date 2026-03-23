@@ -22,8 +22,14 @@ export default function Navbar() {
 
         {/* Desktop Button */}
         <div className="hidden md:flex gap-6">
-          <Button variant="outline">Login</Button>
-          <Button variant="solid">Sign Up</Button>
+          <Button variant="outline" style={{ cursor: "pointer" }}>
+            Login
+          </Button>
+          <Link to="/signUp">
+            <Button variant="solid" style={{ cursor: "pointer" }}>
+              Sign Up
+            </Button>
+          </Link>
         </div>
 
         {/* Toggle Button */}
@@ -36,13 +42,24 @@ export default function Navbar() {
       </div>
 
       {isMenuOpen && (
-        <div className="flex flex-col gap-5">
-          <Button variant="outline" className="cursor-pointer">
-            Login
-          </Button>
-          <Button variant="solid" className="cursor-pointer">
-            Sign Up
-          </Button>
+        <div className="flex flex-col gap-5 w-full mb-5">
+          <Link to="/login" className="w-full">
+            <button
+              variant="outline"
+              className="w-full border border-gray-300 shadow-md rounded-md p-2 font-medium text-lg"
+            >
+              Login
+            </button>
+          </Link>
+
+          <Link to="/signUp" className="w-full">
+            <button
+              variant="solid"
+              className="w-full bg-blue-600 shadow-md rounded-md p-2 font-medium text-lg text-white"
+            >
+              Sign Up
+            </button>
+          </Link>
         </div>
       )}
     </nav>

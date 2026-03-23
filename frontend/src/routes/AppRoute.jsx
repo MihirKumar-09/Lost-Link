@@ -6,6 +6,7 @@ import LostPageForm from "../pages/LostPageForm";
 import FoundPage from "../pages/FoundPage";
 import ReportDetails from "../pages/ReportDetailsPage";
 import FoundPageForm from "../pages/FoundPageForm";
+import SignUp from "../pages/SignUp";
 export default function AppRoute() {
   return (
     <Routes>
@@ -15,6 +16,7 @@ export default function AppRoute() {
       <Route path="/found-item" element={<FoundPage />} />
       <Route path="/found-item-form" element={<FoundPageForm />} />
       <Route path="/lostItem/:id" element={<ReportDetails />} />
+      <Route path="/signUp" element={<SignUp />} />
       <Route path="*" element={<NoFound />} />
     </Routes>
   );
