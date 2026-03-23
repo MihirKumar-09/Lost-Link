@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function Community() {
   return (
     <section className="px-3 sm:px-5 md:px-12 py-10 text-center bg-white flex justify-center items-center">
@@ -17,9 +18,11 @@ export default function Community() {
           the network that brings it home
         </p>
 
-        <button className="border border-white/15 bg-white px-6 py-3 rounded-2xl mt-5 cursor-pointer font-semibold">
-          Get Started Now
-        </button>
+        <Link to="/signIn">
+          <button className="border border-white/15 bg-white px-6 py-3 rounded-2xl mt-5 cursor-pointer font-semibold">
+            Get Started Now
+          </button>
+        </Link>
       </div>
     </section>
   );

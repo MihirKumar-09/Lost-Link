@@ -26,4 +26,13 @@ router.get("/logout", (req, res) => {
   });
 });
 
+// For frontend ;
+router.get("/me", (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.json({ user: req.user });
+  } else {
+    return res.status(401).json({ user: null });
+  }
+});
+
 export default router;

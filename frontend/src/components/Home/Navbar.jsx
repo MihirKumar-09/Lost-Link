@@ -2,15 +2,17 @@ import { Button } from "@radix-ui/themes";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../Context/AuthContext";
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, setUser } = useAuth();
+
   return (
     <nav
-      id="home"
       className="w-full border-b border-black/20 drop-shadow-xs px-3 sm:px-4 md:px-6"
       style={{ background: "#F7F8FA" }}
     >
-      {/* Main Container */}
       <div className="flex justify-between items-center">
         <Link to="/">
           <img
@@ -20,22 +22,35 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Desktop Button */}
+        {/* Desktop */}
         <div className="hidden md:flex gap-6">
-          <Link to="/signIn">
-            <Button variant="outline" style={{ cursor: "pointer" }}>
-              Login
-            </Button>
-          </Link>
-
-          <Link to="/signUp">
-            <Button variant="solid" style={{ cursor: "pointer" }}>
-              Sign Up
-            </Button>
-          </Link>
+          {user ? (
+            <>
+              <span className="font-medium">Hi, {user.name}</span>
+              <Button
+                onClick={async () => {
+                  await fetch("http://localhost:8080/auth/logout", {
+                    credentials: "include",
+                  });
+                  setUser(null);
+                }}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/signIn">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link to="/signUp">
+                <Button variant="solid">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Toggle Button */}
+        {/* Mobile Toggle */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden"
@@ -44,25 +59,36 @@ export default function Navbar() {
         </button>
       </div>
 
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="flex flex-col gap-5 w-full mb-5">
-          <Link to="/signIn" className="w-full">
-            <button
-              variant="outline"
-              className="w-full border border-gray-300 shadow-md rounded-md p-2 font-medium text-lg"
-            >
-              Login
-            </button>
-          </Link>
-
-          <Link to="/signUp" className="w-full">
-            <button
-              variant="solid"
-              className="w-full bg-blue-600 shadow-md rounded-md p-2 font-medium text-lg text-white"
-            >
-              Sign Up
-            </button>
-          </Link>
+          {user ? (
+            <>
+              <span className="text-lg">Hi, {user.name}</span>
+              <button
+                onClick={async () => {
+                  await fetch("http://localhost:8080/auth/logout", {
+                    credentials: "include",
+                  });
+                  setUser(null);
+                }}
+                className="w-full bg-red-500 text-white p-2 rounded-md"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signIn">
+                <button className="w-full border p-2 rounded-md">Login</button>
+              </Link>
+              <Link to="/signUp">
+                <button className="w-full bg-blue-600 text-white p-2 rounded-md">
+                  Sign Up
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       )}
     </nav>
