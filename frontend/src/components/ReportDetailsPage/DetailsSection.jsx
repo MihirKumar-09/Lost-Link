@@ -17,7 +17,7 @@ export default function DetailsSection({ productDetails }) {
   }
   return (
     <section className="w-full md:w-1/2">
-      <div className=" rounded-2xl overflow-hidden bg-white shadow-xl px-5 py-3">
+      <div className="px-5 py-3 overflow-hidden bg-white shadow-xl rounded-2xl">
         {/* Report Type */}
         <div className="flex justify-between">
           <span
@@ -47,11 +47,11 @@ export default function DetailsSection({ productDetails }) {
         </div>
 
         {/* Report Name & Time */}
-        <div className="text-left mt-4">
+        <div className="mt-4 text-left">
           <h2 className="text-[20px] md:text-[22px] font-medium">
             {productDetails.name} - {productDetails.color}
           </h2>
-          <p className="flex gap-1 items-center text-gray-500 text-sm mt-2">
+          <p className="flex items-center gap-1 mt-2 text-sm text-gray-500">
             <span>
               <TimerReset size={18} />
             </span>
@@ -63,7 +63,7 @@ export default function DetailsSection({ productDetails }) {
         </div>
 
         {/* Location and Date */}
-        <div className="flex gap-6 mt-5 max-w-md">
+        <div className="flex max-w-md gap-6 mt-5">
           <div className="flex flex-1 flex-col gap-1 bg-[#F3F2F2] px-5 py-2 text-left rounded-xl">
             <p className="text-[12px] md:text-[13px] font-bold text-gray-500">
               LOCATION
@@ -96,7 +96,7 @@ export default function DetailsSection({ productDetails }) {
         </div>
 
         {/* Category & Report Status */}
-        <div className="flex gap-6 mt-5 max-w-md">
+        <div className="flex max-w-md gap-6 mt-5">
           <div className="flex flex-1 flex-col gap-1 bg-[#F3F2F2] px-5 py-2 text-left rounded-xl">
             <p className="text-[12px] md:text-[13px] font-bold text-gray-500">
               CATEGORY
@@ -104,7 +104,7 @@ export default function DetailsSection({ productDetails }) {
             <span className="flex gap-2">
               <Shapes size={20} color="#2563EB" />{" "}
               <p className="text-[12px] md:text-[16px] font-medium truncate">
-                {productDetails.location.area}, {productDetails.location.city}
+                {productDetails.category}
               </p>
             </span>
           </div>
@@ -122,9 +122,9 @@ export default function DetailsSection({ productDetails }) {
         </div>
 
         {/* Description */}
-        <div className="text-left mt-10">
-          <h4 className="text-sm md:text-md font-medium">ITEM DESCRIPTION</h4>
-          <p className="text-sm px-3">{productDetails.description}</p>
+        <div className="mt-10 text-left">
+          <h4 className="text-sm font-medium md:text-md">ITEM DESCRIPTION</h4>
+          <p className="px-3 text-sm">{productDetails.description}</p>
         </div>
 
         {/* Buttons */}
@@ -132,17 +132,17 @@ export default function DetailsSection({ productDetails }) {
           <span>
             <BadgeCheck color="white" />
           </span>
-          <button className="p-3 text-white text-lg font-medium cursor-pointer">
+          <button className="p-3 text-lg font-medium text-white cursor-pointer">
             {productDetails.reportType === "lost"
               ? "I found this (Report Now)"
               : "This is Mine (Claim item)"}
           </button>
         </div>
-        <div className="border-3 border-gray-200 text-center rounded-xl mt-8 flex items-center justify-center cursor-pointer">
+        <div className="flex items-center justify-center mt-8 text-center border-gray-200 cursor-pointer border-3 rounded-xl">
           <span>
             <MessageSquare color="black" />
           </span>
-          <button className="p-3 text-black text-lg font-medium cursor-pointer">
+          <button className="p-3 text-lg font-medium text-black cursor-pointer">
             Contact Details
           </button>
         </div>
