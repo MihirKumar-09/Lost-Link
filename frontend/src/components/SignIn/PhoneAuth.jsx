@@ -6,6 +6,8 @@ export default function PhoneAuth() {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [phoneError, setPhoneError] = useState("");
+  const [otpError, setOtpError] = useState("");
 
   // Timer for resend OTP
   useEffect(() => {
@@ -20,8 +22,9 @@ export default function PhoneAuth() {
 
   // Send OTP
   const sendOtp = async () => {
+    setPhoneError("");
     if (!/^[0-9]{10}$/.test(phone)) {
-      alert("Enter valid 10-digit phone number");
+      setPhoneError("Enter valid mobile number");
       return;
     }
 
@@ -37,17 +40,19 @@ export default function PhoneAuth() {
 
   // Verify OTP
   const verifyOtp = async () => {
+    setOtpError("");
     if (!/^[0-9]{6}$/.test(otp)) {
-      alert("Enter valid 6-digit OTP");
+      setOtpError("Enter valid OTP");
       return;
     }
 
     setLoading(true);
 
-    // Replace with real API
     setTimeout(() => {
       setLoading(false);
       setStep("verified");
+
+      window.location.href = "/";
     }, 1000);
   };
 
@@ -56,20 +61,28 @@ export default function PhoneAuth() {
       {/* STEP 1: PHONE INPUT */}
       {step === "phone" && (
         <div className="flex flex-col gap-4">
-          <input
-            type="tel"
-            placeholder="Enter phone number"
-            className="border border-gray-300 p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
+          <span className="flex flex-col">
+            <input
+              type="tel"
+              placeholder="Enter phone number"
+              className="p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+              value={phone}
+              onChange={(e) => {
+                setPhone(e.target.value.replace(/\D/g, ""));
+                if (phoneError) setPhoneError("");
+              }}
+            />
+            {phoneError && (
+              <p className="mt-1 text-sm text-red-500">{phoneError}</p>
+            )}
+          </span>
 
           <button
             onClick={sendOtp}
             disabled={loading}
             className="bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
           >
-            {loading ? "Sending OTP..." : "Send OTP"}
+            {loading ? "Verifying..." : "Verify"}
           </button>
         </div>
       )}
@@ -85,9 +98,12 @@ export default function PhoneAuth() {
             type="text"
             maxLength={6}
             placeholder="Enter 6-digit OTP"
-            className="border border-gray-300 p-3 rounded-lg text-center tracking-widest outline-none focus:ring-2 focus:ring-green-500"
+            className="p-3 tracking-widest text-center border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-green-500"
             value={otp}
-            onChange={(e) => setOtp(e.target.value)}
+            onChange={(e) => {
+              setOtp(e.target.value);
+              if (otpError) setOtpError("");
+            }}
           />
 
           <button
@@ -120,15 +136,6 @@ export default function PhoneAuth() {
               Change Number
             </button>
           </div>
-        </div>
-      )}
-
-      {/* STEP 3: SUCCESS */}
-      {step === "verified" && (
-        <div className="text-center mt-4">
-          <h3 className="text-green-600 font-semibold text-lg">
-            ✅ Login Successful
-          </h3>
         </div>
       )}
     </div>

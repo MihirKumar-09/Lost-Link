@@ -38,38 +38,22 @@ router.get("/me", (req, res) => {
 });
 
 //! Mobile number SingUp and Login;
-router.post("/phone-login", async (req, res) => {
-  const { phone, name, email } = req.body;
-
+router.post("/phone-login", async (req, res, next) => {
   try {
-    // Search using phone and email
-    let user = await User.findOne({
-      $or: [{ phone }, { email }],
-    });
+    const { phone, name, email } = req.body;
+
+    let user = await User.findOne({ phone });
 
     if (!user) {
-      // create new user;
-      user = await User.create({
-        phone,
-        name,
-        email,
-      });
-    } else {
-      // Update existing user;
-      if (!user.phone) user.phone = phone;
-      if (name && !user.name) user.name = name;
-      if (email && !user.email) user.email = email;
-
-      await user.save();
+      user = await User.create({ phone, name, email });
     }
-
-    // Create session;
+    // Create session
     req.login(user, (err) => {
-      if (err) return res.status(500).json({ err });
-      res.json({ user });
+      if (err) return next(err);
+      return res.json({ user });
     });
   } catch (err) {
-    res.status(500).json({ err });
+    next(err);
   }
 });
 

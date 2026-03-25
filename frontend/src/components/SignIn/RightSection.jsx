@@ -36,10 +36,6 @@ export default function RightSection() {
           </div>
           {/* Phone Auth */}
           <PhoneAuth />
-          {/* Create account button */}
-          <div className="flex justify-center items-center mt-5 rounded-md p-2 bg-[#F97316] text-white text-sm md:text-base font-medium cursor-pointer">
-            <button className="cursor-pointer">CREATE ACCOUNT</button>
-          </div>
           <p className="text-sm text-center mt-5 text-gray-500">
             Don't have an account?{" "}
             <a className="text-blue-500" href="http://localhost:5173/signUp">
