@@ -1,5 +1,5 @@
 import { Button } from "@radix-ui/themes";
-import { Gift, Heart, LogOut, Menu, User, X } from "lucide-react";
+import { ChevronDown, Gift, Heart, Menu, Power, User, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
@@ -28,17 +28,35 @@ export default function Navbar() {
         <div className="hidden md:flex gap-6 items-center font-medium">
           {user ? (
             <>
-              <Link to="/">Home</Link>
-              <Link to="/items">All Items</Link>
-              <Link to="/my-report">My Report</Link>
+              <Link to="/" className="relative group px-1 py-1">
+                <span className="transition-colors duration-200 group-hover:text-blue-600">
+                  Home
+                </span>
 
-              {/* 🔥 Account Dropdown */}
+                <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+              <Link to="/items" className="relative group px-1 py-1">
+                <span className="transition-colors duration-200 group-hover:text-blue-600">
+                  All Items
+                </span>
+                <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+              <Link to="/my-report" className="relative group px-1 py-1">
+                <span className="transition-colors duration-200 group-hover:text-blue-600">
+                  My Report
+                </span>
+                <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+              {/* Account drop down */}
               <div className="relative">
                 <div
                   onClick={() => setAccountOptions((prev) => !prev)}
-                  className="cursor-pointer"
+                  className="cursor-pointer relative group py-1 px-1"
                 >
-                  Account
+                  <span className="transition-colors duration-200 group-hover:text-blue-600">
+                    Account
+                  </span>
+                  <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
                 </div>
 
                 {accountOptions && (
@@ -80,7 +98,7 @@ export default function Navbar() {
                     items-center gap-2"
                     >
                       <span>
-                        <LogOut />
+                        <Power />
                       </span>
                       Logout
                     </button>
@@ -91,10 +109,12 @@ export default function Navbar() {
           ) : (
             <>
               <Link to="/signIn">
-                <Button variant="outline">Login</Button>
+                <Button variant="outline" style={{ cursor: "pointer" }}>
+                  Login
+                </Button>
               </Link>
               <Link to="/signUp">
-                <Button>Sign Up</Button>
+                <Button style={{ cursor: "pointer" }}>Sign Up</Button>
               </Link>
             </>
           )}
@@ -111,29 +131,88 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="flex flex-col gap-5 w-full mb-5 mt-4">
+        <div className="flex flex-col gap-4 w-full mb-5 mt-4 px-1">
           {user ? (
             <>
-              <span className="text-lg">Hi, {user.name}</span>
+              {/* Main Links */}
+              <Link to="/" className="py-2">
+                Home
+              </Link>
+              <Link to="/items" className="py-2">
+                All Items
+              </Link>
+              <Link to="/my-report" className="py-2">
+                My Report
+              </Link>
 
-              <Link to="/">Home</Link>
-              <Link to="/items">All Items</Link>
-              <Link to="/my-report">My Report</Link>
+              {/* Account Section */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+                <button
+                  onClick={() => setAccountOptions((prev) => !prev)}
+                  className="flex justify-between items-center w-full font-medium"
+                >
+                  <span>Account</span>
+                  <ChevronDown
+                    size={18}
+                    className={`transition-transform ${
+                      accountOptions ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-              <button
-                onClick={logout}
-                className="w-full bg-red-500 text-white p-2 rounded-md"
-              >
-                Logout
-              </button>
+                {accountOptions && (
+                  <div className="mt-3 flex flex-col gap-3 pl-2">
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center gap-2 py-1 active:scale-95"
+                    >
+                      <User size={18} />
+                      Profile
+                    </Link>
+
+                    <Link
+                      to="/claims"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center gap-2 py-1 active:scale-95"
+                    >
+                      <Gift size={18} />
+                      My Claim
+                    </Link>
+
+                    <Link
+                      to="/wishlist"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center gap-2 py-1 active:scale-95"
+                    >
+                      <Heart size={18} />
+                      Wishlist
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 py-1 text-red-500 active:scale-95"
+                    >
+                      <Power size={18} />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>
               <Link to="/signIn">
-                <button className="w-full border p-2 rounded-md">Login</button>
+                <button className="w-full border p-3 rounded-xl active:scale-95">
+                  Login
+                </button>
               </Link>
+
               <Link to="/signUp">
-                <button className="w-full bg-blue-600 text-white p-2 rounded-md">
+                <button className="w-full bg-blue-600 text-white p-3 rounded-xl active:scale-95">
                   Sign Up
                 </button>
               </Link>
