@@ -31,3 +31,9 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/*! Custom font family */
+@font-face {
+  font-family: "MadeWith";
+  src: url("/fonts/Keshia.otf");
+}

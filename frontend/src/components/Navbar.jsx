@@ -7,12 +7,14 @@ import {
   Heart,
   Power,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { Button } from "@radix-ui/themes";
 import { useState } from "react";
 
 export default function Navbar() {
+  const location = useLocation();
+  const isProfilePage = location.pathname === "/profile";
   const [menu, setMenu] = useState(false);
   const { user, logout } = useAuth();
 
@@ -27,18 +29,20 @@ export default function Navbar() {
       </Link>
 
       {/* Search */}
-      <span
-        className="hidden gap-3 p-3 border rounded-full md:flex w-160"
-        style={{ backgroundColor: "#F1F5F9" }}
-      >
-        <Search style={{ width: "4%" }} />
-        <input
-          type="text"
-          placeholder="Search items like phone, wallet, keys"
-          style={{ width: "calc(100% - 4%)", backgroundColor: "#F1F5F9" }}
-          className="flex-1 bg-transparent outline-none"
-        />
-      </span>
+      {!isProfilePage && (
+        <span
+          className="hidden gap-3 p-3 border rounded-full md:flex w-160"
+          style={{ backgroundColor: "#F1F5F9" }}
+        >
+          <Search style={{ width: "4%" }} />
+          <input
+            type="text"
+            placeholder="Search items like phone, wallet, keys"
+            style={{ width: "calc(100% - 4%)", backgroundColor: "#F1F5F9" }}
+            className="flex-1 bg-transparent outline-none"
+          />
+        </span>
+      )}
 
       {/* Right Section */}
       <div className="relative flex items-center gap-8">
