@@ -25,8 +25,8 @@ export default function LeftSection({ active, setActive }) {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <section className="px-3 py-6 sm:px-5 md:px-8 flex flex-col justify-between">
-      <div className="w-80 rounded-xl overflow-hidden">
+    <section className="w-64 md:w-80 px-3 py-6 md:px-8 hidden md:flex flex-col justify-between">
+      <div className="rounded-xl overflow-hidden">
         <div className="flex items-center gap-3 bg-white px-2 py-4 shadow-lg rounded-xl">
           <img
             src={user?.avatar?.trim() || "/images/Profile/profile.jpeg"}
