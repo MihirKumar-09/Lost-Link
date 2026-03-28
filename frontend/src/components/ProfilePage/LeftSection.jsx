@@ -1,6 +1,5 @@
 import { useAuth } from "../../Context/AuthContext";
 import { cn } from "../../lib/utils.js";
-import { useState } from "react";
 import {
   LayoutDashboard,
   Archive,
@@ -20,19 +19,15 @@ const options = [
   { name: "Settings", icon: Settings },
 ];
 
-export default function LeftSection() {
+export default function LeftSection({ active, setActive }) {
   const { user } = useAuth();
-
-  const [active, setActive] = useState("Dashboard");
 
   if (!user) return <div>Loading...</div>;
 
   return (
-    <section className=" px-3 py-6 sm:px-5 md:px-8 flex flex-col justify-between">
+    <section className="px-3 py-6 sm:px-5 md:px-8 flex flex-col justify-between">
       <div className="w-80 rounded-xl overflow-hidden">
-        {/* Profile Section */}
         <div className="flex items-center gap-3 bg-white px-2 py-4 shadow-lg rounded-xl">
-          {/* Profile Image */}
           <img
             src={user?.avatar?.trim() || "/images/Profile/profile.jpeg"}
             alt="profile"
@@ -44,7 +39,6 @@ export default function LeftSection() {
           </div>
         </div>
 
-        {/* Options */}
         <div className="w-full flex flex-col gap-2 mt-5">
           {options.map((option) => {
             const Icon = option.icon;
@@ -55,12 +49,10 @@ export default function LeftSection() {
                 key={option.name}
                 onClick={() => setActive(option.name)}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl p-3 cursor-pointer",
-                  `${
-                    isActive
-                      ? "bg-blue-50 text-blue-600 shadow-md font-medium"
-                      : " bg-transparent text-black hover:bg-gray-200"
-                  }`,
+                  "flex items-center gap-3 rounded-xl p-3 cursor-pointer transition",
+                  isActive
+                    ? "bg-blue-50 text-blue-600 shadow-md font-medium"
+                    : "bg-transparent text-black hover:bg-gray-200",
                 )}
               >
                 <Icon size={20} />
@@ -70,7 +62,7 @@ export default function LeftSection() {
           })}
         </div>
       </div>
-      {/* Footer */}
+
       <div>
         <p style={{ fontFamily: "MadeWith" }} className="text-[26px]">
           <span className="flex items-center gap-2">
