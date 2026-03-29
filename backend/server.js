@@ -26,6 +26,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //! SESSION FIRST
 app.use(
@@ -48,10 +49,12 @@ app.use(passport.session());
 //!=========IMPORT ALL ROUTES=========
 import ReportRoute from "./routes/reportRoute.js";
 import AuthRoute from "./routes/auth.js";
+import LostReportRoute from "./routes/lostReport.js";
 
 //!=========REGISTER WITH SERVER=========
 app.use("/reports", ReportRoute);
 app.use("/auth", AuthRoute);
+app.use("/reports", LostReportRoute);
 
 const connectDB = async () => {
   try {
