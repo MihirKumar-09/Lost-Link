@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CalendarCheck,
   Camera,
@@ -5,7 +7,125 @@ import {
   ShieldAlert,
   Timer,
 } from "lucide-react";
-export default function LostReportForm() {
+
+export default function FoundReportForm() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "",
+    color: "",
+    model: "",
+    city: "",
+    area: "",
+    foundDate: "",
+    foundTime: "",
+    description: "",
+    phone: "",
+    email: "",
+  });
+
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function handleImageChange(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!image) {
+      setError("Please upload an image.");
+      return;
+    }
+
+    if (!formData.foundDate || !formData.foundTime) {
+      setError("Please select both found date and time.");
+      return;
+    }
+
+    const combinedDateTime = new Date(
+      `${formData.foundDate}T${formData.foundTime}`,
+    );
+
+    if (isNaN(combinedDateTime.getTime())) {
+      setError("Invalid found date/time.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const submitData = new FormData();
+      submitData.append("name", formData.name);
+      submitData.append("category", formData.category);
+      submitData.append("color", formData.color);
+      submitData.append("model", formData.model);
+      submitData.append("city", formData.city);
+      submitData.append("area", formData.area);
+      submitData.append("dateTime", combinedDateTime.toISOString());
+      submitData.append("description", formData.description);
+      submitData.append("phone", formData.phone);
+      submitData.append("email", formData.email);
+      submitData.append("image", image);
+
+      const res = await fetch("http://localhost:8080/reports/newFoundReport", {
+        method: "POST",
+        body: submitData,
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to submit found report");
+      }
+
+      setSuccess("Found report submitted successfully.");
+
+      setFormData({
+        name: "",
+        category: "",
+        color: "",
+        model: "",
+        city: "",
+        area: "",
+        foundDate: "",
+        foundTime: "",
+        description: "",
+        phone: "",
+        email: "",
+      });
+      setImage(null);
+      setPreview("");
+
+      // optional redirect
+      // navigate("/dashboard");
+    } catch (err) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <section className="px-3 sm:px-5 md:px-12 py-10 text-center bg-[#F8F6F6]">
       <div>
@@ -13,14 +133,18 @@ export default function LostReportForm() {
           Report a Found Item
         </h1>
         <p className="text-center mt-4 text-gray-500 text-sm md:text-base">
-          Help return lost belongings to there rightful owner by reporting what
+          Help return lost belongings to their rightful owner by reporting what
           you found.
         </p>
       </div>
-      <div className="flex justify-center mt-10 w-full ">
-        <form className="flex flex-col gap-10 w-full max-w-3xl">
+
+      <div className="flex justify-center mt-10 w-full">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-10 w-full max-w-3xl"
+        >
           {/* Section 1 */}
-          <div className=" bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 1
@@ -29,6 +153,7 @@ export default function LostReportForm() {
                 Item Details
               </span>
             </div>
+
             <div className="flex flex-col gap-2 text-left mt-5">
               <label htmlFor="name" className="font-medium text-md">
                 Item Name
@@ -36,23 +161,27 @@ export default function LostReportForm() {
               <input
                 type="text"
                 id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 placeholder="e.g. Blue iPhone 13, Brown Leather Wallet"
                 className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
               />
             </div>
-            <div className="flex gap-4 mt-5">
+
+            <div className="flex flex-col md:flex-row gap-4 mt-5">
               <div className="flex flex-col gap-2 flex-1 text-left">
                 <label htmlFor="category" className="font-medium text-md">
                   Category
                 </label>
                 <select
                   id="category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
                 >
-                  <option disabled selected>
-                    Select Category
-                  </option>
-                  <option value="All">All</option>
+                  <option value="">Select Category</option>
                   <option value="Phones">Phones</option>
                   <option value="Tablets">Tablets</option>
                   <option value="Wallets">Wallets</option>
@@ -77,42 +206,65 @@ export default function LostReportForm() {
                 <input
                   type="text"
                   id="color"
+                  name="color"
+                  value={formData.color}
+                  onChange={handleChange}
                   placeholder="e.g. Midnight Blue, Silver"
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
                 />
               </div>
             </div>
+
             <div className="flex flex-col gap-2 text-left mt-5">
-              <label htmlFor="brand" className="font-medium text-md">
+              <label htmlFor="model" className="font-medium text-md">
                 Brand / Model
               </label>
               <input
                 type="text"
-                id="brand"
-                placeholder="e.g. Apple, Samsung, etc..."
-                className="border border-gray-300 rounded-lg w-90 md:w-170 p-3 focus:outline-none"
+                id="model"
+                name="model"
+                value={formData.model}
+                onChange={handleChange}
+                placeholder="e.g. Apple, Samsung"
+                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
               />
             </div>
-            <div className="flex flex-col gap-2  mt-5">
-              <label htmlFor="myFile" className="font-medium text-md text-left">
-                Item Photos
+
+            <div className="flex flex-col gap-2 mt-5">
+              <label htmlFor="image" className="font-medium text-md text-left">
+                Item Photo
               </label>
+
               <label
-                htmlFor="fileUpload"
+                htmlFor="image"
                 className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl p-8 cursor-pointer hover:bg-gray-50 transition"
               >
-                <span>
-                  <Camera />
-                </span>
+                <Camera />
                 <p className="text-sm text-gray-600 font-medium">
-                  Drag and drop photos here, or{" "}
-                  <span className="text-orange-500">browse</span>
+                  Click to upload or browse
                 </p>
                 <p className="text-xs text-gray-400">PNG, JPG up to 10MB</p>
               </label>
-              <input type="file" id="fileUpload" className="hidden" />
+
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+
+              {preview && (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-32 h-32 object-cover rounded-lg border mt-3"
+                />
+              )}
             </div>
           </div>
+
           {/* Section 2 */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
             <div className="flex items-center gap-3">
@@ -123,32 +275,53 @@ export default function LostReportForm() {
                 Where Did You Find It?
               </span>
             </div>
-            <div className="flex flex-col gap-2 text-left mt-5">
-              <label htmlFor="name" className="font-medium text-md">
-                Location Found
-              </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="e.g. Search for a location or address"
-                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
-              />
-            </div>
-            <div className="mt-5">
-              Live Map for choose location(We do latter)
-            </div>
-            <div className="flex gap-4 mt-5">
+
+            <div className="flex flex-col md:flex-row gap-4 mt-5">
               <div className="flex flex-col gap-2 flex-1 text-left">
-                <label htmlFor="date" className="font-medium text-md">
+                <label htmlFor="city" className="font-medium text-md">
+                  City
+                </label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="e.g. Delhi"
+                  className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2 flex-1 text-left">
+                <label htmlFor="area" className="font-medium text-md">
+                  Area / Location
+                </label>
+                <input
+                  type="text"
+                  id="area"
+                  name="area"
+                  value={formData.area}
+                  onChange={handleChange}
+                  placeholder="e.g. Rajiv Chowk Metro Station"
+                  className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 mt-5">
+              <div className="flex flex-col gap-2 flex-1 text-left">
+                <label htmlFor="foundDate" className="font-medium text-md">
                   Found Date
                 </label>
                 <div className="relative">
                   <input
                     type="date"
-                    id="date"
+                    id="foundDate"
+                    name="foundDate"
+                    value={formData.foundDate}
+                    onChange={handleChange}
                     onClick={(e) => e.target.showPicker?.()}
-                    placeholder="e.g. Navy Blue"
-                    className=" appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                    className="appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                     <CalendarCheck className="md:hidden" />
@@ -157,16 +330,18 @@ export default function LostReportForm() {
               </div>
 
               <div className="flex flex-col gap-2 flex-1 text-left">
-                <label htmlFor="time" className="font-medium text-md">
+                <label htmlFor="foundTime" className="font-medium text-md">
                   Approximate Time
                 </label>
                 <div className="relative">
                   <input
                     type="time"
-                    id="time"
+                    id="foundTime"
+                    name="foundTime"
+                    value={formData.foundTime}
+                    onChange={handleChange}
                     onClick={(e) => e.target.showPicker?.()}
-                    placeholder="e.g. Navy Blue"
-                    className=" appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                    className="appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                     <Timer className="md:hidden" />
@@ -193,12 +368,16 @@ export default function LostReportForm() {
               </label>
               <textarea
                 id="description"
-                placeholder="Provide details like condition, unique scratches, or engravings. Do not mention highly specific unique identifiers like special numbers here"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Provide details like condition, scratches, or other visible features. Do not share highly sensitive private details."
                 className="border border-gray-300 rounded-lg w-full h-30 md:h-40 p-3 focus:outline-none"
               />
             </div>
           </div>
-          {/* section 4 */}
+
+          {/* Section 4 */}
           <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
@@ -208,16 +387,20 @@ export default function LostReportForm() {
                 Safe Contact Method
               </span>
             </div>
-            <div className="flex gap-4 mt-5">
+
+            <div className="flex flex-col md:flex-row gap-4 mt-5">
               <div className="flex flex-col gap-2 flex-1 text-left">
-                <label htmlFor="number" className="font-medium text-md">
+                <label htmlFor="phone" className="font-medium text-md">
                   Phone Number (Optional)
                 </label>
                 <input
-                  type="number"
-                  id="number"
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
-                  placeholder="+91 (123-456-789-0)"
+                  placeholder="+91 9876543210"
                 />
               </div>
 
@@ -228,40 +411,58 @@ export default function LostReportForm() {
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="john@example.com"
                   className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
                 />
               </div>
             </div>
           </div>
-          {/* Warning Session */}
-          <div className="border border-orange-300 rounded-2xl flex gap-5 pl-4 py-5 pr-10 md:pr-20 bg-[#FFFBEB] mb-10">
+
+          {(error || success) && (
+            <div className="text-left">
+              {error && <p className="text-red-600 font-medium">{error}</p>}
+              {success && (
+                <p className="text-green-600 font-medium">{success}</p>
+              )}
+            </div>
+          )}
+
+          <div className="border border-orange-300 rounded-2xl flex gap-5 pl-4 py-5 pr-4 md:pr-20 bg-[#FFFBEB] mb-4">
             <span>
               <ShieldAlert color="#EC5B13" />
             </span>
             <span className="text-left">
               <h6 className="text-[#993402] font-medium">Security Notice</h6>
               <p className="text-[#EC5B13] mt-2">
-                To protect the rightful owner, do not revel highly sensitive
-                details publicly (Like passcode or specific contents inside a
-                wallet). Use these details later to verify the owner during
-                private messaging
+                To protect the rightful owner, do not reveal highly sensitive
+                details publicly. Use those details later for verification.
               </p>
             </span>
           </div>
-          {/* Buttons */}
+
           <div className="flex w-full justify-between items-center">
-            <button className="group relative border border-gray-300 px-8 md:px-12 py-3 rounded-xl font-medium bg-white overflow-hidden transition-all duration-300">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="group relative border border-gray-300 px-8 md:px-12 py-3 rounded-xl font-medium bg-white overflow-hidden transition-all duration-300"
+            >
               <span className="absolute inset-0 bg-gray-100 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
               <span className="relative transition-all duration-300 group-hover:text-black">
                 Cancel
               </span>
             </button>
-            <button className="group flex items-center px-8 md:px-12 py-3 rounded-xl font-medium bg-[#EC5B13] text-white overflow-hidden relative transition-all duration-300 hover:shadow-lg">
-              <span className="transition-all duration-300 group-hover:-translate-x-2">
-                Submit Found Item Report
-              </span>
 
+            <button
+              type="submit"
+              disabled={loading}
+              className="group flex items-center px-8 md:px-12 py-3 rounded-xl font-medium bg-[#EC5B13] text-white overflow-hidden relative transition-all duration-300 hover:shadow-lg disabled:opacity-70"
+            >
+              <span className="transition-all duration-300 group-hover:-translate-x-2">
+                {loading ? "Submitting..." : "Submit Found Item Report"}
+              </span>
               <SendHorizontal className="ml-3 transition-all duration-300 group-hover:translate-x-3 group-hover:scale-110" />
             </button>
           </div>

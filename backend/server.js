@@ -2,12 +2,13 @@ import express from "express";
 import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
+import MongoStore from "connect-mongo";
 import "./config/passport.js";
 import cors from "cors";
-const app = express();
 import dotenv from "dotenv";
 dotenv.config();
 
+const app = express();
 const PORT = 8080;
 const URI = process.env.MONGODB_URI;
 
@@ -31,13 +32,17 @@ app.use(express.urlencoded({ extended: true }));
 //! SESSION FIRST
 app.use(
   session({
-    secret: "some_secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: URI,
+      collectionName: "session",
+    }),
     cookie: {
       httpOnly: true,
       secure: false, // true only for HTTPS
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 Days
     },
   }),
 );
@@ -50,11 +55,13 @@ app.use(passport.session());
 import ReportRoute from "./routes/reportRoute.js";
 import AuthRoute from "./routes/auth.js";
 import LostReportRoute from "./routes/lostReport.js";
+import FoundReportRoute from "./routes/foundReport.js";
 
 //!=========REGISTER WITH SERVER=========
 app.use("/reports", ReportRoute);
 app.use("/auth", AuthRoute);
 app.use("/reports", LostReportRoute);
+app.use("/reports", FoundReportRoute);
 
 const connectDB = async () => {
   try {
