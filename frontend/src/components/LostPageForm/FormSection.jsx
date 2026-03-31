@@ -116,43 +116,43 @@ export default function LostReportForm() {
   return (
     <section className="px-3 sm:px-5 md:px-12 py-10 text-center bg-[#F8F6F6]">
       <div>
-        <h1 className="text-black font-bold text-3xl md:text-4xl mb-2 text-center mt-2 md:mt-10">
+        <h1 className="mt-2 mb-2 text-3xl font-bold text-center text-black md:text-4xl md:mt-10">
           Lost Something?
         </h1>
-        <p className="text-center mt-4 text-gray-500 text-sm md:text-base">
+        <p className="mt-4 text-sm text-center text-gray-500 md:text-base">
           Fill in the details below to help our community identify and return
           your missing property.
         </p>
       </div>
 
-      <div className="flex justify-center mt-10 w-full">
+      <div className="flex justify-center w-full mt-10">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-10 w-full max-w-3xl"
+          className="flex flex-col w-full max-w-3xl gap-10"
         >
           {error && (
-            <p className="text-red-600 text-sm text-left font-medium">
+            <p className="text-sm font-medium text-left text-red-600">
               {error}
             </p>
           )}
 
           {success && (
-            <p className="text-green-600 text-sm text-left font-medium">
+            <p className="text-sm font-medium text-left text-green-600">
               {success}
             </p>
           )}
 
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 1
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Item Information
               </span>
             </div>
 
-            <div className="flex flex-col gap-2 text-left mt-5">
+            <div className="flex flex-col gap-2 mt-5 text-left">
               <label htmlFor="itemName" className="font-medium text-md">
                 Item Name
               </label>
@@ -163,12 +163,12 @@ export default function LostReportForm() {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="e.g. Midnight Blue Leather Wallet"
-                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
 
-            <div className="flex gap-4 mt-5 flex-col md:flex-row">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="category" className="font-medium text-md">
                   Category
                 </label>
@@ -177,7 +177,7 @@ export default function LostReportForm() {
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 >
                   <option value="" disabled>
                     Select Category
@@ -199,7 +199,7 @@ export default function LostReportForm() {
                 </select>
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="color" className="font-medium text-md">
                   Color
                 </label>
@@ -210,12 +210,12 @@ export default function LostReportForm() {
                   value={form.color}
                   onChange={handleChange}
                   placeholder="e.g. Navy Blue"
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 text-left mt-5">
+            <div className="flex flex-col gap-2 mt-5 text-left">
               <label htmlFor="model" className="font-medium text-md">
                 Brand / Model
               </label>
@@ -226,26 +226,26 @@ export default function LostReportForm() {
                 value={form.model}
                 onChange={handleChange}
                 placeholder="e.g. Apple iPhone 13 Pro"
-                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
 
             <div className="flex flex-col gap-2 mt-5">
               <label
                 htmlFor="fileUpload"
-                className="font-medium text-md text-left"
+                className="font-medium text-left text-md"
               >
                 Upload Photos
               </label>
 
               <label
                 htmlFor="fileUpload"
-                className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl p-8 cursor-pointer hover:bg-gray-50 transition"
+                className="flex flex-col items-center justify-center gap-2 p-8 transition border-2 border-gray-300 border-dashed cursor-pointer rounded-xl hover:bg-gray-50"
               >
                 <span>
                   <Camera />
                 </span>
-                <p className="text-sm text-gray-600 font-medium">
+                <p className="text-sm font-medium text-gray-600">
                   <span className="text-orange-500">Click to upload</span> or
                   drag and drop
                 </p>
@@ -264,24 +264,24 @@ export default function LostReportForm() {
                 <img
                   src={preview}
                   alt="preview"
-                  className="w-32 h-32 object-cover rounded-lg border mt-3"
+                  className="object-cover w-32 h-32 mt-3 border rounded-lg"
                 />
               )}
             </div>
           </div>
 
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 2
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Where Did You Lose It?
               </span>
             </div>
 
-            <div className="flex gap-4 mt-5 flex-col md:flex-row">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="city" className="font-medium text-md">
                   City
                 </label>
@@ -292,11 +292,11 @@ export default function LostReportForm() {
                   value={form.city}
                   onChange={handleChange}
                   placeholder="e.g. Delhi"
-                  className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="area" className="font-medium text-md">
                   Area / Place
                 </label>
@@ -307,13 +307,13 @@ export default function LostReportForm() {
                   value={form.area}
                   onChange={handleChange}
                   placeholder="e.g. Central Park Mall, Food Court"
-                  className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex gap-4 mt-5 flex-col md:flex-row">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="date" className="font-medium text-md">
                   Lost Date
                 </label>
@@ -325,15 +325,15 @@ export default function LostReportForm() {
                     value={form.date}
                     onChange={handleChange}
                     onClick={(e) => e.target.showPicker?.()}
-                    className="appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none focus:outline-none"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span className="absolute -translate-y-1/2 pointer-events-none right-3 top-1/2">
                     <CalendarCheck className="md:hidden" />
                   </span>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="time" className="font-medium text-md">
                   Approximate Time
                 </label>
@@ -345,9 +345,9 @@ export default function LostReportForm() {
                     value={form.time}
                     onChange={handleChange}
                     onClick={(e) => e.target.showPicker?.()}
-                    className="appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none focus:outline-none"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span className="absolute -translate-y-1/2 pointer-events-none right-3 top-1/2">
                     <Timer className="md:hidden" />
                   </span>
                 </div>
@@ -355,17 +355,17 @@ export default function LostReportForm() {
             </div>
           </div>
 
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 3
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Description
               </span>
             </div>
 
-            <div className="flex flex-col gap-2 text-left mt-5">
+            <div className="flex flex-col gap-2 mt-5 text-left">
               <label htmlFor="description" className="font-medium text-md">
                 Item Description
               </label>
@@ -375,23 +375,23 @@ export default function LostReportForm() {
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Please provide any unique identifying features, content inside, or special circumstances..."
-                className="border border-gray-300 rounded-lg w-full h-30 md:h-40 p-3 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg h-30 md:h-40 focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 4
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Contact Details
               </span>
             </div>
 
-            <div className="flex gap-4 mt-5 flex-col md:flex-row">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="phone" className="font-medium text-md">
                   Phone Number (Optional)
                 </label>
@@ -401,12 +401,12 @@ export default function LostReportForm() {
                   name="phone"
                   value={form.phone}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                   placeholder="+91 9876543210"
                 />
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="email" className="font-medium text-md">
                   Email Address
                 </label>
@@ -417,19 +417,19 @@ export default function LostReportForm() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="alex@example.com"
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex w-full justify-between items-center">
+          <div className="flex items-center justify-between w-full">
             <button
               type="button"
               onClick={handleCancel}
-              className="group relative border border-gray-300 px-8 md:px-12 py-3 rounded-xl font-medium bg-white overflow-hidden transition-all duration-300"
+              className="relative px-8 py-3 overflow-hidden font-medium transition-all duration-300 bg-white border border-gray-300 cursor-pointer group md:px-12 rounded-xl"
             >
-              <span className="absolute inset-0 bg-gray-100 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
+              <span className="absolute inset-0 transition-transform duration-300 origin-left scale-x-0 bg-gray-100 group-hover:scale-x-100"></span>
               <span className="relative transition-all duration-300 group-hover:text-black">
                 Cancel
               </span>
@@ -438,7 +438,7 @@ export default function LostReportForm() {
             <button
               type="submit"
               disabled={loading}
-              className="group flex items-center px-8 md:px-12 py-3 rounded-xl font-medium bg-[#EC5B13] text-white overflow-hidden relative transition-all duration-300 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+              className="cursor-pointer group flex items-center px-8 md:px-12 py-3 rounded-xl font-medium bg-[#EC5B13] text-white overflow-hidden relative transition-all duration-300 hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <span className="transition-all duration-300 group-hover:-translate-x-2">
                 {loading ? "Submitting..." : "Submit Lost Item Report"}

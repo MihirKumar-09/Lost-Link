@@ -117,8 +117,7 @@ export default function FoundReportForm() {
       setImage(null);
       setPreview("");
 
-      // optional redirect
-      // navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -129,32 +128,32 @@ export default function FoundReportForm() {
   return (
     <section className="px-3 sm:px-5 md:px-12 py-10 text-center bg-[#F8F6F6]">
       <div>
-        <h1 className="text-black font-bold text-3xl md:text-4xl mb-2 text-center mt-2 md:mt-10">
+        <h1 className="mt-2 mb-2 text-3xl font-bold text-center text-black md:text-4xl md:mt-10">
           Report a Found Item
         </h1>
-        <p className="text-center mt-4 text-gray-500 text-sm md:text-base">
+        <p className="mt-4 text-sm text-center text-gray-500 md:text-base">
           Help return lost belongings to their rightful owner by reporting what
           you found.
         </p>
       </div>
 
-      <div className="flex justify-center mt-10 w-full">
+      <div className="flex justify-center w-full mt-10">
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col gap-10 w-full max-w-3xl"
+          className="flex flex-col w-full max-w-3xl gap-10"
         >
           {/* Section 1 */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 1
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Item Details
               </span>
             </div>
 
-            <div className="flex flex-col gap-2 text-left mt-5">
+            <div className="flex flex-col gap-2 mt-5 text-left">
               <label htmlFor="name" className="font-medium text-md">
                 Item Name
               </label>
@@ -165,12 +164,12 @@ export default function FoundReportForm() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g. Blue iPhone 13, Brown Leather Wallet"
-                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 mt-5">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="category" className="font-medium text-md">
                   Category
                 </label>
@@ -179,7 +178,7 @@ export default function FoundReportForm() {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 >
                   <option value="">Select Category</option>
                   <option value="Phones">Phones</option>
@@ -199,7 +198,7 @@ export default function FoundReportForm() {
                 </select>
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="color" className="font-medium text-md">
                   Color
                 </label>
@@ -210,12 +209,12 @@ export default function FoundReportForm() {
                   value={formData.color}
                   onChange={handleChange}
                   placeholder="e.g. Midnight Blue, Silver"
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-2 text-left mt-5">
+            <div className="flex flex-col gap-2 mt-5 text-left">
               <label htmlFor="model" className="font-medium text-md">
                 Brand / Model
               </label>
@@ -226,21 +225,21 @@ export default function FoundReportForm() {
                 value={formData.model}
                 onChange={handleChange}
                 placeholder="e.g. Apple, Samsung"
-                className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
 
             <div className="flex flex-col gap-2 mt-5">
-              <label htmlFor="image" className="font-medium text-md text-left">
+              <label htmlFor="image" className="font-medium text-left text-md">
                 Item Photo
               </label>
 
               <label
                 htmlFor="image"
-                className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl p-8 cursor-pointer hover:bg-gray-50 transition"
+                className="flex flex-col items-center justify-center gap-2 p-8 transition border-2 border-gray-300 border-dashed cursor-pointer rounded-xl hover:bg-gray-50"
               >
                 <Camera />
-                <p className="text-sm text-gray-600 font-medium">
+                <p className="text-sm font-medium text-gray-600">
                   Click to upload or browse
                 </p>
                 <p className="text-xs text-gray-400">PNG, JPG up to 10MB</p>
@@ -259,25 +258,25 @@ export default function FoundReportForm() {
                 <img
                   src={preview}
                   alt="Preview"
-                  className="w-32 h-32 object-cover rounded-lg border mt-3"
+                  className="object-cover w-32 h-32 mt-3 border rounded-lg"
                 />
               )}
             </div>
           </div>
 
           {/* Section 2 */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 2
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Where Did You Find It?
               </span>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 mt-5">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="city" className="font-medium text-md">
                   City
                 </label>
@@ -288,11 +287,11 @@ export default function FoundReportForm() {
                   value={formData.city}
                   onChange={handleChange}
                   placeholder="e.g. Delhi"
-                  className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="area" className="font-medium text-md">
                   Area / Location
                 </label>
@@ -303,13 +302,13 @@ export default function FoundReportForm() {
                   value={formData.area}
                   onChange={handleChange}
                   placeholder="e.g. Rajiv Chowk Metro Station"
-                  className="border border-gray-300 rounded-lg w-full p-3 focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 mt-5">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="foundDate" className="font-medium text-md">
                   Found Date
                 </label>
@@ -321,15 +320,15 @@ export default function FoundReportForm() {
                     value={formData.foundDate}
                     onChange={handleChange}
                     onClick={(e) => e.target.showPicker?.()}
-                    className="appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none focus:outline-none"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span className="absolute -translate-y-1/2 pointer-events-none right-3 top-1/2">
                     <CalendarCheck className="md:hidden" />
                   </span>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="foundTime" className="font-medium text-md">
                   Approximate Time
                 </label>
@@ -341,9 +340,9 @@ export default function FoundReportForm() {
                     value={formData.foundTime}
                     onChange={handleChange}
                     onClick={(e) => e.target.showPicker?.()}
-                    className="appearance-none border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none focus:outline-none"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <span className="absolute -translate-y-1/2 pointer-events-none right-3 top-1/2">
                     <Timer className="md:hidden" />
                   </span>
                 </div>
@@ -352,17 +351,17 @@ export default function FoundReportForm() {
           </div>
 
           {/* Section 3 */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 3
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Description
               </span>
             </div>
 
-            <div className="flex flex-col gap-2 text-left mt-5">
+            <div className="flex flex-col gap-2 mt-5 text-left">
               <label htmlFor="description" className="font-medium text-md">
                 Item Description
               </label>
@@ -372,24 +371,24 @@ export default function FoundReportForm() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Provide details like condition, scratches, or other visible features. Do not share highly sensitive private details."
-                className="border border-gray-300 rounded-lg w-full h-30 md:h-40 p-3 focus:outline-none"
+                className="w-full p-3 border border-gray-300 rounded-lg h-30 md:h-40 focus:outline-none"
               />
             </div>
           </div>
 
           {/* Section 4 */}
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-5">
+          <div className="p-5 bg-white border-2 border-gray-200 rounded-xl">
             <div className="flex items-center gap-3">
               <span className="bg-[#FDEEE7] w-8 h-8 flex items-center justify-center rounded-full text-[#FF6900] font-medium">
                 4
               </span>
-              <span className="font-medium text-lg md:text-xl">
+              <span className="text-lg font-medium md:text-xl">
                 Safe Contact Method
               </span>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4 mt-5">
-              <div className="flex flex-col gap-2 flex-1 text-left">
+            <div className="flex flex-col gap-4 mt-5 md:flex-row">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="phone" className="font-medium text-md">
                   Phone Number (Optional)
                 </label>
@@ -399,12 +398,12 @@ export default function FoundReportForm() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                   placeholder="+91 9876543210"
                 />
               </div>
 
-              <div className="flex flex-col gap-2 flex-1 text-left">
+              <div className="flex flex-col flex-1 gap-2 text-left">
                 <label htmlFor="email" className="font-medium text-md">
                   Email Address
                 </label>
@@ -415,7 +414,7 @@ export default function FoundReportForm() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="john@example.com"
-                  className="border border-gray-300 rounded-lg p-3 focus:outline-none w-full"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
                 />
               </div>
             </div>
@@ -423,9 +422,9 @@ export default function FoundReportForm() {
 
           {(error || success) && (
             <div className="text-left">
-              {error && <p className="text-red-600 font-medium">{error}</p>}
+              {error && <p className="font-medium text-red-600">{error}</p>}
               {success && (
-                <p className="text-green-600 font-medium">{success}</p>
+                <p className="font-medium text-green-600">{success}</p>
               )}
             </div>
           )}
@@ -443,13 +442,13 @@ export default function FoundReportForm() {
             </span>
           </div>
 
-          <div className="flex w-full justify-between items-center">
+          <div className="flex items-center justify-between w-full">
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="group relative border border-gray-300 px-8 md:px-12 py-3 rounded-xl font-medium bg-white overflow-hidden transition-all duration-300"
+              className="relative px-8 py-3 overflow-hidden font-medium transition-all duration-300 bg-white border border-gray-300 cursor-pointer group md:px-12 rounded-xl"
             >
-              <span className="absolute inset-0 bg-gray-100 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></span>
+              <span className="absolute inset-0 transition-transform duration-300 origin-left scale-x-0 bg-gray-100 group-hover:scale-x-100"></span>
               <span className="relative transition-all duration-300 group-hover:text-black">
                 Cancel
               </span>
@@ -458,7 +457,7 @@ export default function FoundReportForm() {
             <button
               type="submit"
               disabled={loading}
-              className="group flex items-center px-8 md:px-12 py-3 rounded-xl font-medium bg-[#EC5B13] text-white overflow-hidden relative transition-all duration-300 hover:shadow-lg disabled:opacity-70"
+              className="group flex cursor-pointer items-center px-8 md:px-12 py-3 rounded-xl font-medium bg-[#EC5B13] text-white overflow-hidden relative transition-all duration-300 hover:shadow-lg disabled:opacity-70"
             >
               <span className="transition-all duration-300 group-hover:-translate-x-2">
                 {loading ? "Submitting..." : "Submit Found Item Report"}
