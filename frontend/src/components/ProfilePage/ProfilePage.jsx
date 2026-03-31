@@ -29,7 +29,7 @@ export default function ProfilePage() {
       <div className="flex flex-1 h-[calc(100vh-72px)] w-full">
         <LeftSection active={active} setActive={setActive} />
 
-        <div className="flex flex-1 flex-col lg:flex-row w-full">
+        <div className="flex flex-1 flex-col lg:flex-row w-full overflow-y-scroll no-scrollbar">
           <div className="flex-1 min-w-0">
             <RightSection active={active} />
           </div>

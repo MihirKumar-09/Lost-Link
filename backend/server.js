@@ -56,12 +56,14 @@ import ReportRoute from "./routes/reportRoute.js";
 import AuthRoute from "./routes/auth.js";
 import LostReportRoute from "./routes/lostReport.js";
 import FoundReportRoute from "./routes/foundReport.js";
+import FavoriteRoute from "./routes/favoriteRoute.js";
 
 //!=========REGISTER WITH SERVER=========
 app.use("/reports", ReportRoute);
 app.use("/auth", AuthRoute);
 app.use("/reports", LostReportRoute);
 app.use("/reports", FoundReportRoute);
+app.use("/favorites", FavoriteRoute);
 
 const connectDB = async () => {
   try {

@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema(
     name: String,
     email: String,
     avatar: String,
+    favorites: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Report",
+      },
+    ],
   },
   { timestamps: true },
 );
