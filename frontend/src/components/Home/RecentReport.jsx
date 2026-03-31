@@ -197,7 +197,11 @@ export default function RecentReport() {
                     </div>
 
                     <span className="text-sm font-medium text-gray-400">
-                      {new Date(report.dateTime).getFullYear()}
+                      {new Date(report?.dateTime).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </span>
                   </div>
 

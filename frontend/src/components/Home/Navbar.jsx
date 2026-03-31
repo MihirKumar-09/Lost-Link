@@ -1,14 +1,52 @@
 import { Button } from "@radix-ui/themes";
-import { ChevronDown, Gift, Heart, Menu, Power, User, X } from "lucide-react";
-import { useState } from "react";
+import {
+  ChevronDown,
+  Gift,
+  Heart,
+  Menu,
+  Power,
+  User,
+  UserPlus,
+  LogIn,
+  X,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [accountOptions, setAccountOptions] = useState(false);
+  const [desktopAccountOpen, setDesktopAccountOpen] = useState(false);
+  const [mobileAccountOpen, setMobileAccountOpen] = useState(false);
+
   const { user, logout } = useAuth();
+
+  const desktopMenuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      const clickedDesktop =
+        desktopMenuRef.current && desktopMenuRef.current.contains(e.target);
+
+      const clickedMobile =
+        mobileMenuRef.current && mobileMenuRef.current.contains(e.target);
+
+      if (!clickedDesktop) {
+        setDesktopAccountOpen(false);
+      }
+
+      if (!clickedMobile) {
+        setMobileAccountOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   const navContainer = {
     hidden: { opacity: 0, y: -20 },
@@ -35,7 +73,7 @@ export default function Navbar() {
   const dropdownVariants = {
     hidden: {
       opacity: 0,
-      y: -12,
+      y: 14,
       scale: 0.96,
     },
     visible: {
@@ -49,11 +87,10 @@ export default function Navbar() {
     },
     exit: {
       opacity: 0,
-      y: -8,
-      scale: 0.98,
+      y: 10,
+      scale: 0.97,
       transition: {
         duration: 0.18,
-        ease: "easeInOut",
       },
     },
   };
@@ -99,235 +136,288 @@ export default function Navbar() {
       initial="hidden"
       animate="visible"
       variants={navContainer}
-      className="relative w-full px-3 border-b border-black/20 drop-shadow-xs sm:px-4 md:px-6 z-9999"
-      style={{ background: "#F7F8FA" }}
+      className="sticky top-0 z-9999 w-full border-b border-black/5 bg-white/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(15,23,42,0.05)]"
     >
-      <div className="flex items-center justify-between">
-        {/* Logo */}
-        <motion.div
-          variants={navItem}
-          whileHover={{ scale: 1.05, rotate: -1 }}
-          whileTap={{ scale: 0.96 }}
-        >
-          <Link to="/">
-            <img
-              src="/images/logo.png"
-              alt="Main_Logo"
-              className="w-16 md:w-18"
-            />
-          </Link>
-        </motion.div>
+      <div className="px-3 sm:px-4 md:px-6">
+        <div className="flex items-center justify-between py-2.5 md:py-3">
+          {/* Logo */}
+          <motion.div
+            variants={navItem}
+            whileHover={{ scale: 1.04, rotate: -1 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            <Link to="/" className="flex items-center gap-2">
+              <img
+                src="/images/logo.png"
+                alt="Main_Logo"
+                className="w-16 md:w-18 drop-shadow-sm"
+              />
+            </Link>
+          </motion.div>
 
-        {/* Desktop */}
-        <motion.div
-          variants={navContainer}
-          className="items-center hidden gap-6 md:flex"
-        >
-          {user ? (
-            <>
-              <motion.div
-                variants={navItem}
-                whileHover={{ y: -2 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Link to="/" className="relative px-1 py-1 font-medium group">
-                  <span className="transition-colors duration-200 group-hover:text-blue-600">
-                    Home
-                  </span>
-                  <motion.span
-                    className="absolute left-0 -bottom-1 h-0.5 bg-blue-600"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.25 }}
-                  />
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={navItem}
-                whileHover={{ y: -2 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Link
-                  to="/items"
-                  className="relative px-1 py-1 font-medium group"
-                >
-                  <span className="transition-colors duration-200 group-hover:text-blue-600">
-                    All Items
-                  </span>
-                  <motion.span
-                    className="absolute left-0 -bottom-1 h-0.5 bg-blue-600"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.25 }}
-                  />
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={navItem}
-                whileHover={{ y: -2 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Link
-                  to="/my-report"
-                  className="relative px-1 py-1 font-medium group"
-                >
-                  <span className="transition-colors duration-200 group-hover:text-blue-600">
-                    My Report
-                  </span>
-                  <motion.span
-                    className="absolute left-0 -bottom-1 h-0.5 bg-blue-600"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.25 }}
-                  />
-                </Link>
-              </motion.div>
-
-              {/* Account drop down */}
-              <motion.div variants={navItem} className="relative font-medium">
+          {/* Desktop */}
+          <motion.div
+            variants={navContainer}
+            className="hidden items-center gap-3 lg:gap-5 md:flex"
+          >
+            {user ? (
+              <>
                 <motion.div
-                  onClick={() => setAccountOptions((prev) => !prev)}
-                  className="relative px-1 py-1 cursor-pointer group"
+                  variants={navItem}
                   whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.97 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <span className="transition-colors duration-200 group-hover:text-blue-600">
-                    Account
-                  </span>
-                  <motion.span
-                    className="absolute left-0 -bottom-1 h-0.5 bg-blue-600"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.25 }}
-                  />
+                  <Link
+                    to="/"
+                    className="group relative rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-700 transition-colors duration-200 hover:text-[#3358D4]"
+                  >
+                    <span>Home</span>
+                    <motion.span
+                      className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-[#3358D4]"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.25 }}
+                      style={{ originX: 0 }}
+                    />
+                  </Link>
                 </motion.div>
 
-                <AnimatePresence>
-                  {accountOptions && (
-                    <motion.div
-                      variants={dropdownVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="absolute top-10 right-0 bg-white shadow-lg rounded-md py-4 pl-4 min-w-37.5 flex flex-col gap-6 z-9999 border border-gray-100"
-                    >
+                <motion.div
+                  variants={navItem}
+                  whileHover={{ y: -2 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Link
+                    to="/items"
+                    className="group relative rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-700 transition-colors duration-200 hover:text-[#3358D4]"
+                  >
+                    <span>All Items</span>
+                    <motion.span
+                      className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-[#3358D4]"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.25 }}
+                      style={{ originX: 0 }}
+                    />
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  variants={navItem}
+                  whileHover={{ y: -2 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Link
+                    to="/my-report"
+                    className="group relative rounded-xl px-3 py-2 text-[15px] font-semibold text-slate-700 transition-colors duration-200 hover:text-[#3358D4]"
+                  >
+                    <span>My Report</span>
+                    <motion.span
+                      className="absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-[#3358D4]"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.25 }}
+                      style={{ originX: 0 }}
+                    />
+                  </Link>
+                </motion.div>
+
+                {/* Desktop Account dropdown */}
+                <motion.div
+                  variants={navItem}
+                  className="relative"
+                  ref={desktopMenuRef}
+                >
+                  <motion.button
+                    onClick={() => setDesktopAccountOpen((prev) => !prev)}
+                    whileHover={{ y: -2, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-2.5 py-2 shadow-sm transition hover:shadow-md"
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#EEF3FF] to-[#FDEEE7]">
+                      <User size={18} className="text-slate-700" />
+                    </div>
+
+                    <div className="hidden lg:flex flex-col items-start leading-tight">
+                      <span className="text-sm font-semibold text-slate-800">
+                        {user?.name || "My Account"}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        Manage profile
+                      </span>
+                    </div>
+
+                    <ChevronDown
+                      size={16}
+                      className={`text-slate-500 transition-transform duration-200 ${
+                        desktopAccountOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {desktopAccountOpen && (
                       <motion.div
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
+                        variants={dropdownVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="absolute right-0 top-16 z-9999 w-72 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 p-3 shadow-[0_20px_60px_rgba(15,23,42,0.18)] backdrop-blur-xl"
                       >
-                        <Link
-                          to="/profile"
-                          className="flex items-center gap-2 hover:text-blue-500"
-                        >
-                          <User size={18} />
-                          Profile
-                        </Link>
+                        <div className="mb-3 rounded-2xl bg-linear-to-r from-[#F8FAFC] to-[#FFF7F3] p-3">
+                          <p className="text-sm font-semibold text-slate-800">
+                            {user?.name || "Welcome back"}
+                          </p>
+                          <p className="mt-1 text-xs text-slate-500">
+                            Access your profile, claims, and wishlist.
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <motion.div
+                            whileHover={{ x: 4 }}
+                            transition={{ duration: 0.18 }}
+                          >
+                            <Link
+                              to="/profile"
+                              onClick={() => setDesktopAccountOpen(false)}
+                              className="flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-700 transition hover:bg-slate-50"
+                            >
+                              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EEF3FF]">
+                                <User size={17} />
+                              </div>
+                              <span className="font-medium">Profile</span>
+                            </Link>
+                          </motion.div>
+
+                          <motion.div
+                            whileHover={{ x: 4 }}
+                            transition={{ duration: 0.18 }}
+                          >
+                            <Link
+                              to="/claims"
+                              onClick={() => setDesktopAccountOpen(false)}
+                              className="flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-700 transition hover:bg-slate-50"
+                            >
+                              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF3E8]">
+                                <Gift size={17} />
+                              </div>
+                              <span className="font-medium">My Claim</span>
+                            </Link>
+                          </motion.div>
+
+                          <motion.div
+                            whileHover={{ x: 4 }}
+                            transition={{ duration: 0.18 }}
+                          >
+                            <Link
+                              to="/wishlist"
+                              onClick={() => setDesktopAccountOpen(false)}
+                              className="flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-700 transition hover:bg-slate-50"
+                            >
+                              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFECEF]">
+                                <Heart size={17} />
+                              </div>
+                              <span className="font-medium">Wishlist</span>
+                            </Link>
+                          </motion.div>
+
+                          <div className="my-2 h-px bg-slate-200" />
+
+                          <motion.button
+                            whileHover={{ x: 4 }}
+                            transition={{ duration: 0.18 }}
+                            onClick={() => {
+                              setDesktopAccountOpen(false);
+                              logout();
+                            }}
+                            className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-red-500 transition hover:bg-red-50"
+                          >
+                            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50">
+                              <Power size={17} />
+                            </div>
+                            <span className="font-medium">Logout</span>
+                          </motion.button>
+                        </div>
                       </motion.div>
-
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Link
-                          to="/claims"
-                          className="flex items-center gap-2 hover:text-blue-500"
-                        >
-                          <Gift size={18} />
-                          My Claim
-                        </Link>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Link
-                          to="/wishlist"
-                          className="flex items-center gap-2 hover:text-blue-500"
-                        >
-                          <Heart size={18} />
-                          Wishlist
-                        </Link>
-                      </motion.div>
-
-                      <motion.button
-                        onClick={logout}
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-2 text-left text-red-500 cursor-pointer hover:text-red-800"
-                      >
-                        <Power size={18} />
-                        Logout
-                      </motion.button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </>
-          ) : (
-            <>
-              <motion.div
-                variants={navItem}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                <Link to="/signIn">
-                  <Button variant="outline" style={{ cursor: "pointer" }}>
-                    Login
-                  </Button>
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={navItem}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                <Link to="/signUp">
-                  <Button style={{ cursor: "pointer" }}>Sign Up</Button>
-                </Link>
-              </motion.div>
-            </>
-          )}
-        </motion.div>
-
-        {/* Mobile Toggle */}
-        <motion.button
-          variants={navItem}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden"
-          whileTap={{ scale: 0.9, rotate: 8 }}
-          whileHover={{ scale: 1.06 }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {isMenuOpen ? (
-              <motion.span
-                key="close"
-                initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                transition={{ duration: 0.2 }}
-                className="block"
-              >
-                <X size={28} />
-              </motion.span>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </>
             ) : (
-              <motion.span
-                key="menu"
-                initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
-                transition={{ duration: 0.2 }}
-                className="block"
-              >
-                <Menu size={28} />
-              </motion.span>
+              <>
+                <motion.div
+                  variants={navItem}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  <Link to="/signIn">
+                    <Button
+                      variant="outline"
+                      style={{ cursor: "pointer" }}
+                      className="rounded-xl! px-5! py-2.5! font-semibold!"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  variants={navItem}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  <Link to="/signUp">
+                    <Button
+                      style={{ cursor: "pointer" }}
+                      className="rounded-xl! px-5! py-2.5! font-semibold!"
+                    >
+                      Sign Up
+                    </Button>
+                  </Link>
+                </motion.div>
+              </>
             )}
-          </AnimatePresence>
-        </motion.button>
+          </motion.div>
+
+          {/* Mobile Toggle */}
+          <motion.button
+            variants={navItem}
+            onClick={() => {
+              setIsMenuOpen((prev) => !prev);
+              setMobileAccountOpen(false);
+            }}
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm md:hidden"
+            whileTap={{ scale: 0.9, rotate: 8 }}
+            whileHover={{ scale: 1.04 }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isMenuOpen ? (
+                <motion.span
+                  key="close"
+                  initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  className="block"
+                >
+                  <X size={24} className="text-slate-700" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="menu"
+                  initial={{ opacity: 0, rotate: 90, scale: 0.8 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: -90, scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  className="block"
+                >
+                  <Menu size={24} className="text-slate-700" />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -338,161 +428,229 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex flex-col w-full gap-4 px-1 mt-4 mb-5 overflow-hidden"
+            className="border-t border-slate-200/70 bg-white/95 backdrop-blur-xl md:hidden"
           >
-            {user ? (
-              <>
-                {/* Main Links */}
-                <motion.div variants={mobileItemVariants}>
-                  <Link to="/" className="block py-2">
-                    <motion.span
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.97 }}
+            <div className="flex flex-col gap-3 px-3 py-4">
+              {user ? (
+                <>
+                  <motion.div variants={mobileItemVariants}>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMenuOpen(false)}
                       className="block"
                     >
-                      Home
-                    </motion.span>
-                  </Link>
-                </motion.div>
-
-                <motion.div variants={mobileItemVariants}>
-                  <Link to="/items" className="block py-2">
-                    <motion.span
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="block"
-                    >
-                      All Items
-                    </motion.span>
-                  </Link>
-                </motion.div>
-
-                <motion.div variants={mobileItemVariants}>
-                  <Link to="/my-report" className="block py-2">
-                    <motion.span
-                      whileHover={{ x: 5 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="block"
-                    >
-                      My Report
-                    </motion.span>
-                  </Link>
-                </motion.div>
-
-                {/* Account Section */}
-                <motion.div
-                  variants={mobileItemVariants}
-                  className="p-3 bg-white border border-gray-200 shadow-sm rounded-xl"
-                  whileHover={{ y: -1 }}
-                >
-                  <button
-                    onClick={() => setAccountOptions((prev) => !prev)}
-                    className="flex items-center justify-between w-full font-medium"
-                  >
-                    <span>Account</span>
-                    <motion.div
-                      animate={{ rotate: accountOptions ? 180 : 0 }}
-                      transition={{ duration: 0.22 }}
-                    >
-                      <ChevronDown size={18} />
-                    </motion.div>
-                  </button>
-
-                  <AnimatePresence>
-                    {accountOptions && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0, y: -8 }}
-                        animate={{ opacity: 1, height: "auto", y: 0 }}
-                        exit={{ opacity: 0, height: 0, y: -6 }}
-                        transition={{ duration: 0.22, ease: "easeOut" }}
-                        className="flex flex-col gap-3 pl-2 mt-3 overflow-hidden"
+                      <motion.span
+                        whileHover={{ x: 5 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="block rounded-xl px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
                       >
-                        <motion.div
-                          whileHover={{ x: 4 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            to="/profile"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="flex items-center gap-2 py-1 active:scale-95"
-                          >
-                            <User size={18} />
-                            Profile
-                          </Link>
-                        </motion.div>
+                        Home
+                      </motion.span>
+                    </Link>
+                  </motion.div>
 
-                        <motion.div
-                          whileHover={{ x: 4 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            to="/claims"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="flex items-center gap-2 py-1 active:scale-95"
-                          >
-                            <Gift size={18} />
-                            My Claim
-                          </Link>
-                        </motion.div>
+                  <motion.div variants={mobileItemVariants}>
+                    <Link
+                      to="/items"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block"
+                    >
+                      <motion.span
+                        whileHover={{ x: 5 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="block rounded-xl px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        All Items
+                      </motion.span>
+                    </Link>
+                  </motion.div>
 
-                        <motion.div
-                          whileHover={{ x: 4 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Link
-                            to="/wishlist"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="flex items-center gap-2 py-1 active:scale-95"
-                          >
-                            <Heart size={18} />
-                            Wishlist
-                          </Link>
-                        </motion.div>
+                  <motion.div variants={mobileItemVariants}>
+                    <Link
+                      to="/my-report"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block"
+                    >
+                      <motion.span
+                        whileHover={{ x: 5 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="block rounded-xl px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        My Report
+                      </motion.span>
+                    </Link>
+                  </motion.div>
 
-                        <motion.button
-                          onClick={() => {
-                            logout();
-                            setIsMenuOpen(false);
-                          }}
-                          whileHover={{ x: 4 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="flex items-center gap-2 py-1 text-red-500 active:scale-95"
-                        >
-                          <Power size={18} />
-                          Logout
-                        </motion.button>
+                  <motion.div
+                    ref={mobileMenuRef}
+                    variants={mobileItemVariants}
+                    className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+                  >
+                    <button
+                      onClick={() => setMobileAccountOpen((prev) => !prev)}
+                      className="flex w-full items-center justify-between"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-[#EEF3FF] to-[#FDEEE7]">
+                          <User size={18} className="text-slate-700" />
+                        </div>
+
+                        <div className="flex flex-col items-start leading-tight">
+                          <span className="text-sm font-semibold text-slate-800">
+                            {user?.name || "My Account"}
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            Manage profile
+                          </span>
+                        </div>
+                      </div>
+
+                      <motion.div
+                        animate={{ rotate: mobileAccountOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ChevronDown size={18} className="text-slate-500" />
                       </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              </>
-            ) : (
-              <>
-                <motion.div variants={mobileItemVariants}>
-                  <Link to="/signIn">
-                    <motion.button
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.96 }}
-                      className="w-full p-3 border rounded-xl active:scale-95"
-                    >
-                      Login
-                    </motion.button>
-                  </Link>
-                </motion.div>
+                    </button>
 
+                    <AnimatePresence>
+                      {mobileAccountOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, y: -8 }}
+                          animate={{ opacity: 1, height: "auto", y: 0 }}
+                          exit={{ opacity: 0, height: 0, y: -6 }}
+                          transition={{ duration: 0.22, ease: "easeOut" }}
+                          className="mt-3 overflow-hidden"
+                        >
+                          <div className="mb-3 rounded-2xl bg-linear-to-r from-[#F8FAFC] to-[#FFF7F3] p-3">
+                            <p className="text-sm font-semibold text-slate-800">
+                              {user?.name || "Welcome back"}
+                            </p>
+                            <p className="mt-1 text-xs text-slate-500">
+                              Access your profile, claims, and wishlist.
+                            </p>
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            <motion.div
+                              whileHover={{ x: 4 }}
+                              transition={{ duration: 0.18 }}
+                            >
+                              <Link
+                                to="/profile"
+                                onClick={() => {
+                                  setMobileAccountOpen(false);
+                                  setIsMenuOpen(false);
+                                }}
+                                className="flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-700 transition hover:bg-slate-50"
+                              >
+                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#EEF3FF]">
+                                  <User size={17} />
+                                </div>
+                                <span className="font-medium">Profile</span>
+                              </Link>
+                            </motion.div>
+
+                            <motion.div
+                              whileHover={{ x: 4 }}
+                              transition={{ duration: 0.18 }}
+                            >
+                              <Link
+                                to="/claims"
+                                onClick={() => {
+                                  setMobileAccountOpen(false);
+                                  setIsMenuOpen(false);
+                                }}
+                                className="flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-700 transition hover:bg-slate-50"
+                              >
+                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF3E8]">
+                                  <Gift size={17} />
+                                </div>
+                                <span className="font-medium">My Claim</span>
+                              </Link>
+                            </motion.div>
+
+                            <motion.div
+                              whileHover={{ x: 4 }}
+                              transition={{ duration: 0.18 }}
+                            >
+                              <Link
+                                to="/wishlist"
+                                onClick={() => {
+                                  setMobileAccountOpen(false);
+                                  setIsMenuOpen(false);
+                                }}
+                                className="flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-700 transition hover:bg-slate-50"
+                              >
+                                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFECEF]">
+                                  <Heart size={17} />
+                                </div>
+                                <span className="font-medium">Wishlist</span>
+                              </Link>
+                            </motion.div>
+
+                            <div className="my-2 h-px bg-slate-200" />
+
+                            <motion.button
+                              onClick={() => {
+                                setMobileAccountOpen(false);
+                                setIsMenuOpen(false);
+                                logout();
+                              }}
+                              whileHover={{ x: 4 }}
+                              transition={{ duration: 0.18 }}
+                              className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-red-500 transition hover:bg-red-50"
+                            >
+                              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50">
+                                <Power size={17} />
+                              </div>
+                              <span className="font-medium">Logout</span>
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </>
+              ) : (
                 <motion.div variants={mobileItemVariants}>
-                  <Link to="/signUp">
-                    <motion.button
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.96 }}
-                      className="w-full p-3 text-white bg-blue-600 rounded-xl active:scale-95"
-                    >
-                      Sign Up
-                    </motion.button>
-                  </Link>
+                  <div className="rounded-3xl border border-slate-200/80 bg-white/95 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+                    <div className="mb-4 rounded-2xl bg-linear-to-r from-[#F8FAFC] to-[#FFF7F3] p-4">
+                      <p className="text-sm font-semibold text-slate-800">
+                        Welcome to Lost Link
+                      </p>
+                      <p className="mt-1 text-xs leading-5 text-slate-500">
+                        Sign in to manage reports, wishlist items, and claims.
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <Link to="/signIn" onClick={() => setIsMenuOpen(false)}>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.97 }}
+                          className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 transition hover:bg-slate-50"
+                        >
+                          <LogIn size={17} />
+                          Login
+                        </motion.button>
+                      </Link>
+
+                      <Link to="/signUp" onClick={() => setIsMenuOpen(false)}>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.97 }}
+                          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#3358D4] px-4 py-3 font-semibold text-white shadow-[0_12px_24px_rgba(51,88,212,0.25)] transition hover:bg-[#2949b3]"
+                        >
+                          <UserPlus size={17} />
+                          Sign Up
+                        </motion.button>
+                      </Link>
+                    </div>
+                  </div>
                 </motion.div>
-              </>
-            )}
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
