@@ -138,7 +138,7 @@ export default function Navbar() {
       variants={navContainer}
       className="sticky top-0 z-9999 w-full border-b border-black/5 bg-white/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(15,23,42,0.05)]"
     >
-      <div className="px-3 sm:px-4 md:px-6">
+      <div className="px-3 sm:px-4 md:px-6" id="/home">
         <div className="flex items-center justify-between py-2.5 md:py-3">
           {/* Logo */}
           <motion.div

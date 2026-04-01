@@ -7,7 +7,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 
 export default function Footer() {
   const footerVariants = {
@@ -45,6 +44,13 @@ export default function Footer() {
     { name: "Contact Support", href: "#" },
   ];
 
+  const handleClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <footer className="relative overflow-hidden bg-[#0B1220] text-white">
       {/* Background effects */}
@@ -67,9 +73,9 @@ export default function Footer() {
           {/* Brand */}
           <motion.div variants={itemVariants} className="space-y-5">
             <motion.a
-              href="/"
+              onClick={handleClick}
               whileHover={{ scale: 1.04 }}
-              className="inline-flex items-center gap-3"
+              className="inline-flex cursor-pointer items-center gap-3"
             >
               <img
                 src="/images/logo.png"
@@ -178,20 +184,20 @@ export default function Footer() {
         {/* Bottom Bar */}
         <motion.div
           variants={itemVariants}
-          className="mt-14 flex flex-col gap-4 border-t border-white/10 py-5 sm:flex-row sm:items-center sm:justify-between"
+          className="mt-14 flex flex-col items-center justify-between gap-5 border-t border-white/10 py-6 text-center md:flex-row md:text-left"
         >
-          <p className="text-sm text-white/55">
-            © 2026 Lost Link Technology Inc. All rights reserved.
+          <p className="text-sm text-white/50">
+            © 2026 Lost Link. All rights reserved.
           </p>
 
-          <motion.a
-            href="#home"
+          <motion.button
+            onClick={handleClick}
             whileHover={{ scale: 1.12, y: -5 }}
             whileTap={{ scale: 0.95 }}
             className="group inline-flex h-12 w-12 items-center justify-center self-start rounded-full bg-linear-to-br from-[#3D63F2] to-[#2448d4] shadow-[0_12px_30px_rgba(61,99,242,0.4)] transition sm:self-auto"
           >
             <ArrowUp className="text-white transition duration-300 group-hover:-translate-y-0.5" />
-          </motion.a>
+          </motion.button>
         </motion.div>
       </motion.div>
     </footer>

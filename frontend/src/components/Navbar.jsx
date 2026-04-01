@@ -65,13 +65,12 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      id="home"
       initial={{ opacity: 0, y: -22 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
       className="sticky top-0 z-50 w-full border-b border-black/5 bg-white/75 backdrop-blur-xl supports-backdrop-filter:bg-white/65 shadow-[0_8px_30px_rgba(0,0,0,0.05)]"
     >
-      <div className="px-3 sm:px-4 md:px-6">
+      <div className="px-3 sm:px-4 md:px-6" id="/home">
         <div className="flex items-center justify-between gap-3 py-3">
           {/* Logo */}
           <Link to="/" className="shrink-0">
