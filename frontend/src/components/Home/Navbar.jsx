@@ -146,6 +146,7 @@ export default function Navbar() {
             variants={navItem}
             whileHover={{ scale: 1.04, rotate: -1 }}
             whileTap={{ scale: 0.96 }}
+            className="shrink-0"
           >
             <Link to="/" className="flex items-center gap-2">
               <img
@@ -159,7 +160,7 @@ export default function Navbar() {
           {/* Desktop */}
           <motion.div
             variants={navContainer}
-            className="hidden items-center gap-3 lg:gap-5 md:flex"
+            className="hidden md:flex items-center gap-3 lg:gap-5 shrink-0"
           >
             {user ? (
               <>
@@ -356,38 +357,145 @@ export default function Navbar() {
                 </motion.div>
               </>
             ) : (
-              <>
+              <div className="hidden md:flex items-center gap-3 flex-none">
                 <motion.div
                   variants={navItem}
                   whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-none"
                 >
-                  <Link to="/signIn">
-                    <Button
-                      variant="outline"
-                      style={{ cursor: "pointer" }}
-                      className="rounded-xl! px-5! py-2.5! font-semibold!"
+                  <Link to="/signIn" className="block">
+                    <motion.button
+                      type="button"
+                      initial={false}
+                      whileHover="hover"
+                      whileTap="tap"
+                      className="group relative flex h-12 w-31.5 min-w-31.5 items-center justify-center overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 text-[15px] font-semibold text-slate-700 shadow-[0_10px_25px_rgba(15,23,42,0.07)] backdrop-blur-md"
+                      variants={{
+                        hover: {},
+                        tap: {},
+                      }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
                     >
-                      Login
-                    </Button>
+                      {/* base inner glow */}
+                      <span className="pointer-events-none absolute inset-px rounded-2xl bg-linear-to-b from-white to-slate-50" />
+
+                      {/* top light */}
+                      <motion.span
+                        className="pointer-events-none absolute inset-x-3 top-0 h-px bg-white/90"
+                        variants={{
+                          hover: { opacity: 1 },
+                          tap: { opacity: 0.9 },
+                        }}
+                      />
+
+                      {/* moving shine */}
+                      <motion.span
+                        className="pointer-events-none absolute left-[-40%] top-0 h-full w-[42%] skew-x-[-20deg] bg-white/70 blur-md"
+                        variants={{
+                          hover: { left: "120%" },
+                          tap: { left: "120%" },
+                        }}
+                        transition={{ duration: 0.7, ease: "easeInOut" }}
+                      />
+
+                      {/* subtle hover overlay */}
+                      <motion.span
+                        className="pointer-events-none absolute inset-0 rounded-2xl bg-slate-100/0"
+                        variants={{
+                          hover: { opacity: 1 },
+                          tap: { opacity: 1 },
+                        }}
+                        transition={{ duration: 0.2 }}
+                      />
+
+                      <motion.span
+                        className="relative z-10"
+                        variants={{
+                          hover: { y: -0.5 },
+                          tap: { y: 0.5 },
+                        }}
+                        transition={{ duration: 0.18 }}
+                      >
+                        Login
+                      </motion.span>
+                    </motion.button>
                   </Link>
                 </motion.div>
 
                 <motion.div
                   variants={navItem}
                   whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.96 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex-none"
                 >
-                  <Link to="/signUp">
-                    <Button
-                      style={{ cursor: "pointer" }}
-                      className="rounded-xl! px-5! py-2.5! font-semibold!"
+                  <Link to="/signUp" className="block">
+                    <motion.button
+                      type="button"
+                      initial={false}
+                      whileHover="hover"
+                      whileTap="tap"
+                      className="group relative flex h-12 w-31.5 min-w-31.5 items-center justify-center overflow-hidden rounded-2xl border border-[#4C67E8]/20 bg-[linear-gradient(135deg,#5E7BFF_0%,#4C67E8_45%,#3D56D6_100%)] text-[15px] font-semibold text-white shadow-[0_14px_34px_rgba(76,103,232,0.32)]"
+                      variants={{
+                        hover: {},
+                        tap: {},
+                      }}
+                      transition={{ duration: 0.22, ease: "easeOut" }}
                     >
-                      Sign Up
-                    </Button>
+                      {/* radial glow */}
+                      <motion.span
+                        className="pointer-events-none absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.34),transparent_36%)]"
+                        variants={{
+                          hover: { opacity: 1 },
+                          tap: { opacity: 0.9 },
+                        }}
+                        transition={{ duration: 0.2 }}
+                      />
+
+                      {/* moving glossy streak */}
+                      <motion.span
+                        className="pointer-events-none absolute left-[-45%] top-0 h-full w-[40%] skew-x-[-20deg] bg-white/30 blur-md"
+                        variants={{
+                          hover: { left: "125%" },
+                          tap: { left: "125%" },
+                        }}
+                        transition={{ duration: 0.75, ease: "easeInOut" }}
+                      />
+
+                      {/* hover depth layer */}
+                      <motion.span
+                        className="pointer-events-none absolute inset-0 rounded-2xl bg-black/0"
+                        variants={{
+                          hover: { backgroundColor: "rgba(0,0,0,0.06)" },
+                          tap: { backgroundColor: "rgba(0,0,0,0.10)" },
+                        }}
+                        transition={{ duration: 0.2 }}
+                      />
+
+                      {/* bottom glow */}
+                      <motion.span
+                        className="pointer-events-none absolute -bottom-3 left-1/2 h-6 w-[72%] -translate-x-1/2 rounded-full bg-[#4C67E8]/40 blur-xl"
+                        variants={{
+                          hover: { opacity: 1, scale: 1.04 },
+                          tap: { opacity: 0.95, scale: 1 },
+                        }}
+                        transition={{ duration: 0.22 }}
+                      />
+
+                      <motion.span
+                        className="relative z-10"
+                        variants={{
+                          hover: { y: -0.5 },
+                          tap: { y: 0.5 },
+                        }}
+                        transition={{ duration: 0.18 }}
+                      >
+                        Sign Up
+                      </motion.span>
+                    </motion.button>
                   </Link>
                 </motion.div>
-              </>
+              </div>
             )}
           </motion.div>
 
@@ -569,7 +677,8 @@ export default function Navbar() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setDesktopAccountOpen(false);
+                                  setMobileAccountOpen(false);
+                                  setIsMenuOpen(false);
                                   navigate("/profile", {
                                     state: { activeTab: "Settings" },
                                   });
