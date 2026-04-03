@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { Filter, SlidersHorizontal, MapPin } from "lucide-react";
 
-export default function FilterSection({ filters, setFilters }) {
+export default function FilterSection({
+  filters = { category: "", date: "", distance: 10 },
+  setFilters = () => {},
+}) {
   const handleChange = (key, value) => {
     setFilters((prev) => ({
       ...prev,
