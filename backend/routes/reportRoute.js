@@ -74,4 +74,33 @@ router.delete("/deleteReport/:id", isLoggedIn, async (req, res) => {
   }
 });
 
+//!==========FETCH SPECIFIC USER REPORT==========
+router.get("/my-reports", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const totalReports = await Report.countDocuments({ userId });
+    const totalLostReports = await Report.countDocuments({
+      userId,
+      reportType: "lost",
+    });
+    const totalFoundReports = await Report.countDocuments({
+      userId,
+      reportType: "found",
+    });
+
+    const reports = await Report.find({ userId }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      totalReports,
+      totalLostReports,
+      totalFoundReports,
+      reports,
+    });
+  } catch (err) {
+    console.log("Fetch my report error : ", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;

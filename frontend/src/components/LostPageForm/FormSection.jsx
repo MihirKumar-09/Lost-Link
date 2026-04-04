@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useReports } from "../../Context/ReportContext";
 
 // create a initial form;
 const initialForm = {
@@ -47,6 +48,7 @@ export default function LostReportForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const { fetchMyReports } = useReports();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -129,6 +131,9 @@ export default function LostReportForm() {
       setSuccess("Lost report submitted successfully");
       setForm(initialForm);
       setPreview("");
+      console.log("report create successfully");
+      await fetchMyReports();
+      console.log("report refetch successfully");
       navigate("/");
     } catch (err) {
       setError(err.message || "Something went wrong");

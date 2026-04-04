@@ -12,6 +12,7 @@ import {
   Phone,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useReports } from "../../Context/ReportContext";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 35 },
@@ -27,6 +28,7 @@ const sectionVariants = {
 
 export default function FoundReportForm() {
   const navigate = useNavigate();
+  const { fetchMyReports } = useReports();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -133,7 +135,7 @@ export default function FoundReportForm() {
       });
       setImage(null);
       setPreview("");
-
+      await fetchMyReports();
       navigate("/");
     } catch (err) {
       setError(err.message || "Something went wrong");
