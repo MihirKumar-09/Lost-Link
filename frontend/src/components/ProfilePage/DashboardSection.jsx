@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../Context/AuthContext";
 import { useReports } from "../../Context/ReportContext";
+import { Link } from "react-router-dom";
 
 export default function DashboardSection() {
   const { user, loading: authLoading } = useAuth();
@@ -400,10 +401,12 @@ export default function DashboardSection() {
                         {getTimeAgo(item.createdAt)}
                       </span>
 
-                      <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-white/45">
-                        View details
-                        <ArrowUpRight size={14} />
-                      </span>
+                      <Link to={`/lostItem/${item._id}`}>
+                        <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-white/45">
+                          View details
+                          <ArrowUpRight size={14} />
+                        </span>
+                      </Link>
                     </div>
                   </div>
                 </motion.div>
