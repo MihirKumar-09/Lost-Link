@@ -6,9 +6,14 @@ import MongoStore from "connect-mongo";
 import "./config/passport.js";
 import cors from "cors";
 import dotenv from "dotenv";
+import http from "http";
+import { initSocket } from "./socket/socket.js";
+
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
+
 const PORT = 8080;
 const URI = process.env.MONGODB_URI;
 
@@ -21,7 +26,7 @@ app.use(
       "http://192.168.1.8:5173",
       "http://192.168.1.8:8080",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   }),
 );
@@ -41,8 +46,8 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: false, // true only for HTTPS
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 Days
+      secure: false,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     },
   }),
 );
@@ -58,6 +63,11 @@ import LostReportRoute from "./routes/lostReport.js";
 import FoundReportRoute from "./routes/foundReport.js";
 import FavoriteRoute from "./routes/favoriteRoute.js";
 
+// NEW ROUTES Register
+import ConversationRoute from "./routes/conversationRoutes.js";
+import MessageRoute from "./routes/messageRoutes.js";
+import NotificationRoute from "./routes/notificationRoutes.js";
+
 //!=========REGISTER WITH SERVER=========
 app.use("/reports", ReportRoute);
 app.use("/auth", AuthRoute);
@@ -65,16 +75,24 @@ app.use("/reports", LostReportRoute);
 app.use("/reports", FoundReportRoute);
 app.use("/favorites", FavoriteRoute);
 
+// NEW ROUTES Register
+app.use("/conversations", ConversationRoute);
+app.use("/messages", MessageRoute);
+app.use("/notifications", NotificationRoute);
+
 const connectDB = async () => {
   try {
-    mongoose.connect(URI);
+    await mongoose.connect(URI);
     console.log("Connect with DB");
   } catch (err) {
     console.log("Failed to connect ", err);
   }
 };
 
-app.listen(PORT, () => {
+// Initialize Socket.IO
+initSocket(server);
+
+server.listen(PORT, async () => {
   console.log(`Server listen on PORT ${PORT}`);
-  connectDB();
+  await connectDB();
 });

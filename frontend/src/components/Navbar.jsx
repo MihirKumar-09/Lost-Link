@@ -19,6 +19,8 @@ import {
 import { useAuth } from "../Context/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getUnreadCounts } from "../services/notificationService";
+import { useSocket } from "../Context/SocketContext";
 
 export default function Navbar() {
   const location = useLocation();
@@ -30,6 +32,11 @@ export default function Navbar() {
   const [menu, setMenu] = useState(false);
   const { user, logout } = useAuth();
   const menuRef = useRef(null);
+
+  // Notification states;
+  const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
+  const [messageUnreadCount, setMessageUnreadCount] = useState(0);
+  const { socket } = useSocket();
 
   // search state synced with URL
   const [searchText, setSearchText] = useState(
@@ -110,6 +117,43 @@ export default function Navbar() {
     });
   };
 
+  // Notification initial fetch;
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUnreadCounts = async () => {
+      try {
+        const data = await getUnreadCounts();
+        setNotificationUnreadCount(data.notificationUnreadCount || 0);
+        setMessageUnreadCount(data.messageUnreadCount || 0);
+      } catch (err) {
+        console.log("Unread error count", err);
+      }
+    };
+    fetchUnreadCounts();
+  }, [user]);
+
+  // Real time updates;
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNewNotification = () => {
+      setNotificationUnreadCount((prev) => prev + 1);
+    };
+
+    const handleNewMessage = () => {
+      setMessageUnreadCount((prev) => prev + 1);
+    };
+
+    socket.on("new_notification", handleNewNotification);
+    socket.on("new_message", handleNewMessage);
+
+    return () => {
+      socket.off("new_notification", handleNewNotification);
+      socket.off("new_message", handleNewMessage);
+    };
+  }, [socket]);
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -22 }}
@@ -182,20 +226,35 @@ export default function Navbar() {
             {user && (
               <>
                 <motion.button
+                  type="button"
+                  onClick={() => navigate("/notifications")}
                   whileHover={{ y: -2, scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
                 >
                   <Bell size={19} className="text-slate-700" />
-                  <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-[#EC5B13]" />
+                  {notificationUnreadCount > 0 && (
+                    <span className="absolute -right-1 -top-1 min-w-4.5 rounded-full bg-[#EC5B13] px-1.5 text-center text-[10px] font-bold text-white">
+                      {notificationUnreadCount > 99
+                        ? "99+"
+                        : notificationUnreadCount}
+                    </span>
+                  )}
                 </motion.button>
 
                 <motion.button
+                  type="button"
+                  onClick={() => navigate("/messages")}
                   whileHover={{ y: -2, scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="hidden sm:flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
+                  className="hidden sm:flex relative h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
                 >
                   <MessageSquare size={19} className="text-slate-700" />
+                  {messageUnreadCount > 0 && (
+                    <span className="absolute -right-1 -top-1 min-w-4.5 rounded-full bg-[#3358D4] px-1.5 text-center text-[10px] font-bold text-white">
+                      {messageUnreadCount > 99 ? "99+" : messageUnreadCount}
+                    </span>
+                  )}
                 </motion.button>
               </>
             )}

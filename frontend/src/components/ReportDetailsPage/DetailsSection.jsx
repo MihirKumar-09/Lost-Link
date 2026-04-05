@@ -17,6 +17,7 @@ import { useAuth } from "../../Context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
+import ClaimRequestModal from "../chat/ClaimRequestModal.jsx";
 
 export default function DetailsSection({ productDetails }) {
   const [showEmail, setShowEmail] = useState(false);
@@ -25,6 +26,8 @@ export default function DetailsSection({ productDetails }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [heartEffect, setHeartEffect] = useState(null);
+
+  const [openClaimModal, setOpenClaimModal] = useState(false);
 
   const type = productDetails?.reportType;
   const { user } = useAuth();
@@ -469,23 +472,28 @@ export default function DetailsSection({ productDetails }) {
 
             {/* CTA buttons */}
             <motion.div variants={itemVariants} className="mt-7 space-y-4">
-              <motion.div
-                whileHover={{
-                  y: -3,
-                  boxShadow: "0px 16px 35px rgba(66,103,236,0.28)",
-                }}
-                whileTap={{ scale: 0.98 }}
-                className="group flex items-center justify-center gap-3 rounded-2xl bg-linear-to-r from-[#3358D4] via-[#4267ec] to-[#5B7CFA] px-4 py-4 text-center cursor-pointer shadow-lg"
-              >
-                <div className="rounded-full bg-white/15 p-2">
-                  <BadgeCheck color="white" />
-                </div>
-                <button className="text-base font-semibold text-white cursor-pointer md:text-lg">
-                  {productDetails.reportType === "lost"
-                    ? "I found this (Report Now)"
-                    : "This is Mine (Claim item)"}
-                </button>
-              </motion.div>
+              {!isOwner && productDetails.status !== "closed" && (
+                <motion.button
+                  type="button"
+                  onClick={() => setOpenClaimModal(true)}
+                  whileHover={{
+                    y: -3,
+                    boxShadow: "0px 16px 35px rgba(66,103,236,0.28)",
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-linear-to-r from-[#3358D4] via-[#4267ec] to-[#5B7CFA] px-4 py-4 text-center cursor-pointer shadow-lg"
+                >
+                  <div className="rounded-full bg-white/15 p-2">
+                    <BadgeCheck color="white" />
+                  </div>
+
+                  <span className="text-base font-semibold text-white md:text-lg">
+                    {productDetails.reportType === "lost"
+                      ? "I found this (Report Now)"
+                      : "This is Mine (Claim item)"}
+                  </span>
+                </motion.button>
+              )}
 
               <motion.div
                 onClick={() => setShowEmail((prev) => !prev)}
@@ -570,6 +578,12 @@ export default function DetailsSection({ productDetails }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ClaimRequestModal
+        open={openClaimModal}
+        onClose={() => setOpenClaimModal(false)}
+        report={productDetails}
+      />
     </>
   );
 }

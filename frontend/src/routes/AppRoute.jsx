@@ -10,6 +10,8 @@ import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
 import ProfilePage from "../pages/ProfilePage";
 import AllReportPage from "../pages/AllReportPage";
+import NotificationPage from "../pages/NotificationsPage";
+import MessagePage from "../pages/MessagesPage";
 export default function AppRoute() {
   return (
     <Routes>
@@ -23,6 +25,8 @@ export default function AppRoute() {
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/reports/:type" element={<AllReportPage />} />
+      <Route path="/notifications" element={<NotificationPage />} />
+      <Route path="/messages" element={<MessagePage />} />
       <Route path="*" element={<NoFound />} />
     </Routes>
   );

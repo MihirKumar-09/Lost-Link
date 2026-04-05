@@ -5,14 +5,17 @@ import "./index.css";
 import App from "./App.jsx";
 import { AuthProvider } from "./Context/AuthContext.jsx";
 import { ReportProvider } from "./Context/ReportContext.jsx";
+import { SocketProvider } from "./Context/SocketContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Theme>
       <AuthProvider>
-        <ReportProvider>
-          <App />
-        </ReportProvider>
+        <SocketProvider>
+          <ReportProvider>
+            <App />
+          </ReportProvider>
+        </SocketProvider>
       </AuthProvider>
     </Theme>
   </StrictMode>,
