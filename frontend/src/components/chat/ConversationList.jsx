@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useAuth } from "../../Context/AuthContext";
+import { MessageCircleMore } from "lucide-react";
 
 const containerVariants = {
   hidden: {},
@@ -46,7 +47,7 @@ export default function ConversationList({
 
   if (loading) {
     return (
-      <div className="flex h-full min-h-0 flex-col overflow-hidden border border-white/20 bg-white/70 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.08)] backdrop-blur-xl md:rounded-[28px] md:p-5">
+      <div className="flex h-full min-h-0 flex-col overflow-hidden border-x-0 border-y-0 border-white/20 bg-white/75 p-3 shadow-[0_18px_45px_rgba(15,23,42,0.08)] backdrop-blur-xl md:rounded-[28px] md:border md:p-5">
         <div className="mb-5 shrink-0">
           <h2 className="text-2xl font-bold tracking-tight text-slate-900">
             Messages
@@ -57,7 +58,7 @@ export default function ConversationList({
         </div>
 
         <div className="space-y-3 overflow-y-auto pr-1 scrollbar-hide">
-          {[1, 2, 3, 4].map((item) => (
+          {[1, 2, 3, 4, 5].map((item) => (
             <div
               key={item}
               className="animate-pulse rounded-3xl border border-slate-200/70 bg-white/80 p-4"
@@ -78,12 +79,12 @@ export default function ConversationList({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden border border-white/20 bg-white/70 p-3 shadow-[0_20px_50px_rgba(15,23,42,0.10)] backdrop-blur-xl md:rounded-[28px] md:p-4">
+    <div className="flex h-screen min-h-0 flex-col overflow-hidden bg-white md:border md:border-white/20 md:bg-white/75 md:p-4 md:shadow-[0_20px_50px_rgba(15,23,42,0.10)] md:backdrop-blur-xl">
       {/* Header */}
-      <div className="mb-4 shrink-0 rounded-3xl border border-slate-200/70 bg-[linear-gradient(135deg,rgba(248,250,252,0.95),rgba(255,255,255,0.82))] px-4 py-4 shadow-[0_10px_30px_rgba(15,23,42,0.05)] md:mb-5 md:rounded-3xl">
+      <div className="mb-3 shrink-0 border-b border-slate-200 bg-[linear-gradient(135deg,rgba(248,250,252,0.96),rgba(255,255,255,0.92))] px-4 py-4 md:mb-5 md:rounded-3xl md:border md:border-slate-200/70 md:shadow-[0_10px_30px_rgba(15,23,42,0.05)]">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-[28px] font-bold tracking-tight text-slate-900 md:text-2xl">
+            <h2 className="text-[26px] font-bold tracking-tight text-slate-900 md:text-2xl">
               Messages
             </h2>
             <p className="mt-1 text-sm text-slate-500">
@@ -99,20 +100,20 @@ export default function ConversationList({
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#2563EB,#1D4ED8)] text-base font-bold text-white shadow-[0_12px_30px_rgba(37,99,235,0.35)]"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#2563EB,#1D4ED8)] text-white shadow-[0_12px_30px_rgba(37,99,235,0.35)]"
           >
-            💬
+            <MessageCircleMore className="h-5 w-5" />
           </motion.div>
         </div>
       </div>
 
       {/* List */}
-      <div className="min-h-0 flex-1 overflow-y-auto pr-1 scrollbar-hide">
+      <div className="min-h-0 flex-1 overflow-y-auto pr-1 no-scrollbar">
         {conversations.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex h-full min-h-75 flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 bg-slate-50/70 px-6 text-center md:rounded-[28px]"
+            className="flex h-full min-h-0 flex-col items-center justify-center rounded-[20px] border border-dashed border-slate-300 bg-slate-50/70 px-6 text-center md:rounded-[28px]"
           >
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-200/80 text-2xl">
               💭
@@ -149,29 +150,27 @@ export default function ConversationList({
                   whileHover={{ y: -2, scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedConversation(conversation)}
-                  className={`group relative w-full overflow-hidden rounded-2xl border px-3 py-3 text-left transition-all duration-300 md:px-4 md:py-3.5 ${
+                  className={`group relative w-full overflow-hidden rounded-[22px] border px-3 py-3 text-left transition-all duration-300 md:rounded-2xl md:px-4 md:py-3.5 ${
                     isSelected
-                      ? "border-blue-400 bg-blue-50 shadow-md"
+                      ? "border-blue-400 bg-gray-200 shadow-[0_14px_30px_rgba(37,99,235,0.10)]"
                       : "border-slate-200 bg-white hover:bg-slate-50"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    {/* Avatar */}
                     <div className="shrink-0">
                       <img
                         src={
                           otherUser?.avatar || "/images/Profile/profile.jpeg"
                         }
                         alt={otherUser?.name || "User"}
-                        className="h-11 w-11 rounded-full border border-slate-200 object-cover shadow md:h-10 md:w-10"
+                        className="h-12 w-12 rounded-full border border-slate-200 object-cover shadow md:h-11 md:w-11"
                         referrerPolicy="no-referrer"
                       />
                     </div>
 
-                    {/* Content */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="truncate pr-1 text-[15px] font-semibold text-slate-900 md:text-[14px]">
+                        <h3 className="truncate pr-1 text-[15px] font-semibold text-slate-900">
                           {otherUser?.name || "User"}
                         </h3>
 

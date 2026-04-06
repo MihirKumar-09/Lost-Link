@@ -1,11 +1,19 @@
 @import "tailwindcss";
 @import "@radix-ui/themes/styles.css";
 
-body {
+html,
+body,
+#root {
+  height: 100%;
   margin: 0;
 }
+
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  overflow: hidden;
 }
 
 /*! Floating hero image(Home page) */

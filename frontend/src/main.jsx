@@ -9,7 +9,7 @@ import { SocketProvider } from "./Context/SocketContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Theme>
+    <Theme className="h-full! w-full overflow-hidden">
       <AuthProvider>
         <SocketProvider>
           <ReportProvider>

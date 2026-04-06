@@ -8,6 +8,7 @@ import {
   XCircle,
   ShieldCheck,
   Sparkles,
+  ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "../../Context/AuthContext";
 import {
@@ -60,7 +61,7 @@ const floatingIcon = {
   },
 };
 
-export default function ChatWindow({ conversation }) {
+export default function ChatWindow({ conversation, onBack }) {
   const { user } = useAuth();
   const { socket } = useSocket();
 
@@ -100,8 +101,6 @@ export default function ChatWindow({ conversation }) {
     if (!socket || !conversation?._id) return;
 
     const handleNewMessage = (incomingMessage) => {
-      console.log("incoming socket message:", incomingMessage);
-
       const incomingConversationId = String(
         incomingMessage?.conversationId?._id || incomingMessage?.conversationId,
       );
@@ -116,7 +115,6 @@ export default function ChatWindow({ conversation }) {
         );
 
         if (alreadyExists) return prev;
-
         return [...prev, incomingMessage];
       });
     };
@@ -136,7 +134,7 @@ export default function ChatWindow({ conversation }) {
     try {
       setLoading(true);
       await acceptConversationRequest(conversation._id);
-      window.location.reload();
+      if (refreshConversations) await refreshConversations();
     } catch (error) {
       console.log("Accept error:", error);
     } finally {
@@ -148,7 +146,7 @@ export default function ChatWindow({ conversation }) {
     try {
       setLoading(true);
       await rejectConversationRequest(conversation._id);
-      window.location.reload();
+      if (refreshConversations) await refreshConversations();
     } catch (error) {
       console.log("Reject error:", error);
     } finally {
@@ -174,6 +172,7 @@ export default function ChatWindow({ conversation }) {
       }
 
       setText("");
+      if (refreshConversations) refreshConversations();
     } catch (error) {
       console.log("Send message error:", error);
     }
@@ -224,7 +223,7 @@ export default function ChatWindow({ conversation }) {
 
   if (!conversation) {
     return (
-      <div className="flex h-full items-center justify-center rounded-[28px] border border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.75),rgba(241,245,249,0.7))] p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl">
+      <div className="hidden h-screen items-center justify-center border border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.75),rgba(241,245,249,0.7))] p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl md:flex">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -237,6 +236,7 @@ export default function ChatWindow({ conversation }) {
           >
             <MessageSquareText className="h-8 w-8" />
           </motion.div>
+
           <h3 className="text-xl font-bold text-slate-900">
             Select a conversation
           </h3>
@@ -253,7 +253,7 @@ export default function ChatWindow({ conversation }) {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="relative flex h-full flex-col overflow-hidden rounded-[30px] border border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.78),rgba(241,245,249,0.72))] shadow-[0_24px_60px_rgba(15,23,42,0.10)] backdrop-blur-2xl"
+      className="relative flex h-full flex-col overflow-hidden border-x-0 border-y-0 border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.78),rgba(241,245,249,0.72))] shadow-[0_24px_60px_rgba(15,23,42,0.10)] backdrop-blur-2xl  md:border"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_28%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.10),transparent_25%)]" />
@@ -262,10 +262,19 @@ export default function ChatWindow({ conversation }) {
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 border-b border-white/50 bg-white/45 px-5 py-4 backdrop-blur-xl md:px-6"
+        className="relative z-10 border-b border-white/50 bg-white/45 px-4 py-4 backdrop-blur-xl md:px-6"
       >
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
+            {/* Mobile back */}
+            <motion.button
+              whileTap={{ scale: 0.94 }}
+              onClick={onBack}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm md:hidden"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </motion.button>
+
             <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
               className="relative shrink-0"
@@ -275,11 +284,11 @@ export default function ChatWindow({ conversation }) {
                 <img
                   src={otherUser.avatar}
                   alt={otherUser?.name || "User"}
-                  className="relative h-12 w-12 rounded-full border-2 border-white object-cover shadow-[0_14px_30px_rgba(15,23,42,0.18)]"
+                  className="relative h-11 w-11 rounded-full border-2 border-white object-cover shadow-[0_14px_30px_rgba(15,23,42,0.18)] md:h-12 md:w-12"
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0F172A,#1E3A8A)] text-sm font-bold text-white shadow-[0_14px_30px_rgba(15,23,42,0.18)]">
+                <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0F172A,#1E3A8A)] text-sm font-bold text-white shadow-[0_14px_30px_rgba(15,23,42,0.18)] md:h-12 md:w-12">
                   {getInitials(otherUser?.name)}
                 </div>
               )}
@@ -287,9 +296,10 @@ export default function ChatWindow({ conversation }) {
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="truncate text-[18px] font-bold text-slate-900">
+                <h2 className="truncate text-[16px] font-bold text-slate-900 md:text-[18px]">
                   {otherUser?.name || conversation?.reportId?.name || "Chat"}
                 </h2>
+
                 <motion.div
                   variants={floatingIcon}
                   animate="animate"
@@ -299,7 +309,7 @@ export default function ChatWindow({ conversation }) {
                 </motion.div>
               </div>
 
-              <p className="truncate text-[13px] text-slate-500">
+              <p className="truncate text-[12px] text-slate-500 md:text-[13px]">
                 {conversation?.reportId?.name || "Lost & Found conversation"}
               </p>
             </div>
@@ -307,7 +317,7 @@ export default function ChatWindow({ conversation }) {
 
           <motion.div
             whileHover={{ scale: 1.04 }}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide ${getStatusStyles(
+            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide md:text-[11px] ${getStatusStyles(
               conversation.status,
             )}`}
           >
@@ -318,12 +328,12 @@ export default function ChatWindow({ conversation }) {
       </motion.div>
 
       {/* Messages */}
-      <div className="relative z-10 flex-1 overflow-y-auto no-scrollbar px-4 py-5 md:px-5">
+      <div className="relative z-10 flex-1 overflow-y-auto no-scrollbar px-3 py-4 md:px-5 md:py-5">
         {messages.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex h-full min-h-80 items-center justify-center"
+            className="flex h-full min-h-75 items-center justify-center"
           >
             <div className="rounded-[28px] border border-white/60 bg-white/65 px-7 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.07)] backdrop-blur-xl">
               <motion.div
@@ -362,7 +372,7 @@ export default function ChatWindow({ conversation }) {
                 >
                   <motion.div
                     whileHover={{ y: -2, scale: 1.01 }}
-                    className={`relative max-w-[84%] overflow-hidden rounded-3xl px-4 py-3.5 text-sm shadow-[0_14px_34px_rgba(15,23,42,0.08)] md:max-w-[70%] ${
+                    className={`relative max-w-[82%] overflow-hidden rounded-[26px] px-4 py-3.5 text-sm shadow-[0_14px_34px_rgba(15,23,42,0.08)] md:max-w-[70%] ${
                       isOwn
                         ? "bg-[linear-gradient(135deg,#2563EB,#1D4ED8)] text-white"
                         : "border border-white/70 bg-white/90 text-slate-800 backdrop-blur-xl"
@@ -479,14 +489,10 @@ export default function ChatWindow({ conversation }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 px-4 pb-4"
+          className="relative z-10 px-3 pb-3 md:px-4 md:pb-4"
         >
           <div className="flex items-end gap-3">
-            {/* Input Field */}
-            <motion.div
-              whileFocus={{ scale: 1.01 }}
-              className="flex flex-1 items-end gap-3 rounded-2xl bg-white/70 backdrop-blur-md px-4 py-3 shadow-[0_8px_30px_rgba(15,23,42,0.08)] border border-white/40 focus-within:border-blue-400 transition-all duration-300"
-            >
+            <div className="flex flex-1 items-end gap-3 rounded-2xl border border-white/40 bg-white/70 px-4 py-3 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-md transition-all duration-300 focus-within:border-blue-400">
               <MessageSquareText className="mb-1 h-5 w-5 text-blue-500" />
 
               <textarea
@@ -497,9 +503,8 @@ export default function ChatWindow({ conversation }) {
                 placeholder="Type your message..."
                 className="flex-1 resize-none bg-transparent text-[14px] leading-6 text-slate-800 outline-none placeholder:text-slate-400"
               />
-            </motion.div>
+            </div>
 
-            {/* Send Button */}
             <motion.button
               whileHover={{ scale: 1.08, rotate: 2 }}
               whileTap={{ scale: 0.92 }}
