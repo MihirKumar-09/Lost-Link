@@ -11,11 +11,6 @@ body,
 html {
   scroll-behavior: smooth;
 }
-
-body {
-  overflow: hidden;
-}
-
 /*! Floating hero image(Home page) */
 .floating {
   animation: float 3s ease-in-out infinite;

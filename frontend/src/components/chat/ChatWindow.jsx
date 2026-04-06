@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   SendHorizontal,
@@ -6,9 +6,10 @@ import {
   Clock3,
   CheckCircle2,
   XCircle,
-  ShieldCheck,
   Sparkles,
   ArrowLeft,
+  Check,
+  CheckCheck,
 } from "lucide-react";
 import { useAuth } from "../../Context/AuthContext";
 import {
@@ -23,45 +24,269 @@ import {
 import { useSocket } from "../../Context/SocketContext";
 
 const containerVariants = {
-  hidden: { opacity: 0, y: 14 },
+  hidden: { opacity: 0, y: 16 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.35,
+      duration: 0.32,
       ease: "easeOut",
       when: "beforeChildren",
-      staggerChildren: 0.06,
+      staggerChildren: 0.05,
     },
   },
 };
 
 const bubbleVariants = {
-  hidden: { opacity: 0, y: 18, scale: 0.96 },
+  hidden: { opacity: 0, y: 14, scale: 0.97 },
   show: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.25,
+      duration: 0.24,
       ease: "easeOut",
     },
   },
 };
 
-const floatingIcon = {
+const floatSoft = {
   animate: {
     y: [0, -4, 0],
     rotate: [0, 2, 0, -2, 0],
     transition: {
-      duration: 3,
+      duration: 3.2,
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
 };
 
-export default function ChatWindow({ conversation, onBack }) {
+function AnimatedRightPanelBackground() {
+  const dots = useMemo(
+    () =>
+      Array.from({ length: 14 }, (_, i) => ({
+        id: i,
+        size: i % 3 === 0 ? 3.2 : 2,
+        left: `${7 + ((i * 19) % 86)}%`,
+        top: `${8 + ((i * 11) % 82)}%`,
+        duration: 7 + (i % 4),
+        delay: (i % 5) * 0.5,
+      })),
+    [],
+  );
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* same family as left panel */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,#170329_0%,#110220_26%,#0a0117_60%,#06010f_100%)]" />
+
+      {/* softer moving glows */}
+      <motion.div
+        animate={{
+          x: [0, 34, -18, 0],
+          y: [0, -20, 18, 0],
+          scale: [1, 1.07, 0.96, 1],
+        }}
+        transition={{
+          duration: 13,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute -left-20 top-0 h-80 w-80 rounded-full bg-pink-500/10 blur-3xl"
+      />
+
+      <motion.div
+        animate={{
+          x: [0, -24, 18, 0],
+          y: [0, 18, -14, 0],
+          scale: [1, 0.96, 1.06, 1],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute -right-15 top-16 h-96 w-96 rounded-full bg-fuchsia-500/8 blur-3xl"
+      />
+
+      <motion.div
+        animate={{
+          x: [0, 18, -20, 0],
+          y: [0, -16, 24, 0],
+          scale: [1, 1.05, 0.95, 1],
+        }}
+        transition={{
+          duration: 17,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute -bottom-30 left-[26%] h-112 w-md rounded-full bg-violet-500/10 blur-3xl"
+      />
+
+      {/* mesh like left panel but more subtle */}
+      <motion.svg
+        viewBox="0 0 400 800"
+        className="absolute inset-0 h-full w-full opacity-32"
+        animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <defs>
+          <linearGradient
+            id="rightMeshStroke"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop offset="0%" stopColor="#ff6aad" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#9f67ff" stopOpacity="0.18" />
+          </linearGradient>
+
+          <radialGradient id="rightMeshGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffd0ea" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#ffd0ea" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        <g stroke="url(#rightMeshStroke)" strokeWidth="1" fill="none">
+          <path d="M18 88 L96 54 L164 106 L118 186 L42 156 Z" />
+          <path d="M164 106 L236 82 L284 144 L206 202 L118 186 Z" />
+          <path d="M236 82 L334 44 L390 104 L284 144 Z" />
+          <path d="M48 250 L134 224 L188 284 L96 338 L28 300 Z" />
+          <path d="M188 284 L270 244 L328 316 L246 384 L96 338 Z" />
+          <path d="M246 384 L344 348 L392 418 L286 494 L188 448 Z" />
+          <path d="M42 470 L118 430 L188 448 L144 550 L56 542 Z" />
+          <path d="M144 550 L232 522 L296 592 L220 660 L104 626 Z" />
+          <path d="M220 660 L316 632 L386 702 L292 774 L180 738 Z" />
+        </g>
+
+        <g stroke="#ff7ab6" strokeOpacity="0.1" strokeWidth="0.8">
+          <line x1="96" y1="54" x2="134" y2="224" />
+          <line x1="164" y1="106" x2="188" y2="284" />
+          <line x1="284" y1="144" x2="270" y2="244" />
+          <line x1="118" y1="186" x2="96" y2="338" />
+          <line x1="328" y1="316" x2="344" y2="348" />
+          <line x1="188" y1="448" x2="232" y2="522" />
+          <line x1="296" y1="592" x2="316" y2="632" />
+        </g>
+
+        {[
+          [18, 88],
+          [96, 54],
+          [164, 106],
+          [118, 186],
+          [42, 156],
+          [236, 82],
+          [284, 144],
+          [334, 44],
+          [390, 104],
+          [48, 250],
+          [134, 224],
+          [188, 284],
+          [96, 338],
+          [28, 300],
+          [270, 244],
+          [328, 316],
+          [246, 384],
+          [344, 348],
+          [392, 418],
+          [42, 470],
+          [118, 430],
+          [188, 448],
+          [144, 550],
+          [56, 542],
+          [232, 522],
+          [296, 592],
+          [220, 660],
+          [104, 626],
+          [316, 632],
+          [386, 702],
+          [292, 774],
+          [180, 738],
+        ].map(([cx, cy], index) => (
+          <g key={index}>
+            <circle cx={cx} cy={cy} r="5.5" fill="url(#rightMeshGlow)" />
+            <circle cx={cx} cy={cy} r="1.3" fill="#ffd3eb" opacity="0.55" />
+          </g>
+        ))}
+      </motion.svg>
+
+      {dots.map((dot) => (
+        <motion.span
+          key={dot.id}
+          className="absolute rounded-full bg-pink-200/40"
+          style={{
+            width: `${dot.size}px`,
+            height: `${dot.size}px`,
+            left: dot.left,
+            top: dot.top,
+            boxShadow: "0 0 10px rgba(255,122,182,0.12)",
+          }}
+          animate={{
+            y: [0, -10, 0, 6, 0],
+            opacity: [0.16, 0.4, 0.2, 0.35, 0.16],
+            scale: [1, 1.08, 0.94, 1.03, 1],
+          }}
+          transition={{
+            duration: dot.duration,
+            delay: dot.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,rgba(255,255,255,0.015)_16%,rgba(8,2,22,0.14)_100%)]" />
+    </div>
+  );
+}
+
+function StatusPill({ status }) {
+  const normalized = status?.toLowerCase() || "pending";
+
+  const styles =
+    normalized === "accepted"
+      ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-200"
+      : normalized === "rejected"
+        ? "border-rose-300/25 bg-rose-400/10 text-rose-200"
+        : "border-amber-300/25 bg-amber-400/10 text-amber-200";
+
+  const icon =
+    normalized === "accepted" ? (
+      <CheckCircle2 className="h-3.5 w-3.5" />
+    ) : normalized === "rejected" ? (
+      <XCircle className="h-3.5 w-3.5" />
+    ) : (
+      <Clock3 className="h-3.5 w-3.5" />
+    );
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.04 }}
+      className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] backdrop-blur-xl md:text-[11px] ${styles}`}
+    >
+      {icon}
+      <span>{status}</span>
+    </motion.div>
+  );
+}
+
+function MessageTicks({ isOwn, isSeen }) {
+  if (!isOwn) return null;
+
+  return isSeen ? (
+    <CheckCheck className="h-4 w-4 text-cyan-200" />
+  ) : (
+    <Check className="h-4 w-4 text-white/75" />
+  );
+}
+
+export default function ChatWindow({
+  conversation,
+  onBack,
+  refreshConversations,
+}) {
   const { user } = useAuth();
   const { socket } = useSocket();
 
@@ -172,7 +397,7 @@ export default function ChatWindow({ conversation, onBack }) {
       }
 
       setText("");
-      if (refreshConversations) refreshConversations();
+      if (refreshConversations) await refreshConversations();
     } catch (error) {
       console.log("Send message error:", error);
     }
@@ -195,53 +420,36 @@ export default function ChatWindow({ conversation, onBack }) {
       .toUpperCase();
   };
 
-  const getStatusStyles = (status) => {
-    switch (status) {
-      case "accepted":
-        return "border-emerald-200/80 bg-emerald-50/90 text-emerald-700";
-      case "pending":
-        return "border-amber-200/80 bg-amber-50/90 text-amber-700";
-      case "rejected":
-        return "border-rose-200/80 bg-rose-50/90 text-rose-700";
-      default:
-        return "border-slate-200 bg-slate-50 text-slate-600";
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "accepted":
-        return <CheckCircle2 className="h-3.5 w-3.5" />;
-      case "pending":
-        return <Clock3 className="h-3.5 w-3.5" />;
-      case "rejected":
-        return <XCircle className="h-3.5 w-3.5" />;
-      default:
-        return <ShieldCheck className="h-3.5 w-3.5" />;
-    }
+  const formatTime = (dateValue) => {
+    if (!dateValue) return "";
+    const date = new Date(dateValue);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   if (!conversation) {
     return (
-      <div className="hidden h-screen items-center justify-center border border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.75),rgba(241,245,249,0.7))] p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-2xl md:flex">
+      <div className="relative hidden h-full min-h-155 items-center justify-center overflow-hidden border border-white/10 md:flex">
+        <AnimatedRightPanelBackground />
+
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center"
+          className="relative z-10 max-w-md px-6 text-center"
         >
           <motion.div
-            variants={floatingIcon}
+            variants={floatSoft}
             animate="animate"
-            className="mx-auto mb-4 flex h-18 w-18 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2563EB,#1D4ED8)] text-white shadow-[0_16px_40px_rgba(37,99,235,0.28)]"
+            className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-3xl border border-white/12 bg-white/8 shadow-[0_18px_45px_rgba(0,0,0,0.22)] backdrop-blur-xl"
           >
-            <MessageSquareText className="h-8 w-8" />
+            <MessageSquareText className="h-9 w-9 text-pink-200" />
           </motion.div>
 
-          <h3 className="text-xl font-bold text-slate-900">
-            Select a conversation
-          </h3>
-          <p className="mt-2 text-sm text-slate-500">
-            Pick any conversation from the left panel.
+          <h3 className="text-2xl font-bold text-white">Open a conversation</h3>
+          <p className="mt-3 text-sm leading-7 text-slate-300">
+            Pick any chat from the left panel to continue the conversation.
           </p>
         </motion.div>
       </div>
@@ -253,42 +461,40 @@ export default function ChatWindow({ conversation, onBack }) {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="relative flex h-full flex-col overflow-hidden border-x-0 border-y-0 border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.78),rgba(241,245,249,0.72))] shadow-[0_24px_60px_rgba(15,23,42,0.10)] backdrop-blur-2xl  md:border"
+      className="relative flex h-full min-h-155 flex-col overflow-hidden border border-white/10 shadow-[0_24px_60px_rgba(0,0,0,0.24)]"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_28%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(168,85,247,0.10),transparent_25%)]" />
+      <AnimatedRightPanelBackground />
 
-      {/* Header */}
+      {/* header */}
       <motion.div
-        initial={{ opacity: 0, y: -12 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 border-b border-white/50 bg-white/45 px-4 py-4 backdrop-blur-xl md:px-6"
+        className="relative z-10 border-b border-white/10 bg-white/6 px-4 py-4 backdrop-blur-xl md:px-6"
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            {/* Mobile back */}
             <motion.button
               whileTap={{ scale: 0.94 }}
               onClick={onBack}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm md:hidden"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/10 text-white shadow-sm md:hidden"
             >
               <ArrowLeft className="h-5 w-5" />
             </motion.button>
 
             <motion.div
-              whileHover={{ scale: 1.05, rotate: 2 }}
+              whileHover={{ scale: 1.04, rotate: 2 }}
               className="relative shrink-0"
             >
-              <div className="absolute inset-0 rounded-full bg-blue-400/25 blur-md" />
+              <div className="absolute inset-0 rounded-full bg-pink-500/15 blur-md" />
               {otherUser?.avatar ? (
                 <img
                   src={otherUser.avatar}
                   alt={otherUser?.name || "User"}
-                  className="relative h-11 w-11 rounded-full border-2 border-white object-cover shadow-[0_14px_30px_rgba(15,23,42,0.18)] md:h-12 md:w-12"
+                  className="relative h-12 w-12 rounded-full border-2 border-white/20 object-cover shadow-[0_14px_30px_rgba(0,0,0,0.25)]"
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-[linear-gradient(135deg,#0F172A,#1E3A8A)] text-sm font-bold text-white shadow-[0_14px_30px_rgba(15,23,42,0.18)] md:h-12 md:w-12">
+                <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2a0b45,#8b3dff)] text-sm font-bold text-white shadow-[0_14px_30px_rgba(0,0,0,0.22)]">
                   {getInitials(otherUser?.name)}
                 </div>
               )}
@@ -296,59 +502,49 @@ export default function ChatWindow({ conversation, onBack }) {
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="truncate text-[16px] font-bold text-slate-900 md:text-[18px]">
-                  {otherUser?.name || conversation?.reportId?.name || "Chat"}
+                <h2 className="truncate text-[17px] font-bold text-white md:text-[18px]">
+                  {otherUser?.name || "Chat"}
                 </h2>
 
                 <motion.div
-                  variants={floatingIcon}
+                  variants={floatSoft}
                   animate="animate"
-                  className="hidden sm:block text-blue-500"
+                  className="hidden text-pink-300 sm:block"
                 >
                   <Sparkles className="h-4 w-4" />
                 </motion.div>
               </div>
 
-              <p className="truncate text-[12px] text-slate-500 md:text-[13px]">
+              <p className="truncate text-[12px] text-slate-300 md:text-[13px]">
                 {conversation?.reportId?.name || "Lost & Found conversation"}
               </p>
             </div>
           </div>
 
-          <motion.div
-            whileHover={{ scale: 1.04 }}
-            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide md:text-[11px] ${getStatusStyles(
-              conversation.status,
-            )}`}
-          >
-            {getStatusIcon(conversation.status)}
-            <span>{conversation.status}</span>
-          </motion.div>
+          <StatusPill status={conversation.status} />
         </div>
       </motion.div>
 
-      {/* Messages */}
-      <div className="relative z-10 flex-1 overflow-y-auto no-scrollbar px-3 py-4 md:px-5 md:py-5">
+      {/* messages */}
+      <div className="relative z-10 flex-1 overflow-y-auto px-3 py-4 no-scrollbar md:px-5 md:py-5">
         {messages.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex h-full min-h-75 items-center justify-center"
+            className="flex h-full min-h-80 items-center justify-center"
           >
-            <div className="rounded-[28px] border border-white/60 bg-white/65 px-7 py-10 text-center shadow-[0_16px_40px_rgba(15,23,42,0.07)] backdrop-blur-xl">
+            <div className="max-w-sm rounded-[28px] border border-white/10 bg-white/8 px-7 py-10 text-center shadow-[0_18px_45px_rgba(0,0,0,0.18)] backdrop-blur-xl">
               <motion.div
-                variants={floatingIcon}
+                variants={floatSoft}
                 animate="animate"
-                className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#E0EAFF,#DBEAFE)] text-blue-600 shadow-inner"
+                className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[20px] border border-white/12 bg-white/10 text-pink-200"
               >
                 <MessageSquareText className="h-7 w-7" />
               </motion.div>
 
-              <h3 className="text-lg font-bold text-slate-800">
-                No messages yet
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Start the conversation once the request is accepted.
+              <h3 className="text-lg font-bold text-white">No messages yet</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-300">
+                Start chatting once the request is accepted.
               </p>
             </div>
           </motion.div>
@@ -357,12 +553,14 @@ export default function ChatWindow({ conversation, onBack }) {
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            className="space-y-3"
+            className="space-y-4"
           >
             {messages.map((message) => {
               const isOwn =
                 String(message.senderId?._id || message.senderId) ===
                 String(user?._id);
+
+              const isSeen = Boolean(message.seen || message.isSeen);
 
               return (
                 <motion.div
@@ -372,31 +570,29 @@ export default function ChatWindow({ conversation, onBack }) {
                 >
                   <motion.div
                     whileHover={{ y: -2, scale: 1.01 }}
-                    className={`relative max-w-[82%] overflow-hidden rounded-[26px] px-4 py-3.5 text-sm shadow-[0_14px_34px_rgba(15,23,42,0.08)] md:max-w-[70%] ${
+                    className={`relative max-w-[84%] overflow-hidden rounded-3xl px-4 py-3.5 text-sm shadow-[0_14px_34px_rgba(0,0,0,0.18)] md:max-w-[72%] ${
                       isOwn
-                        ? "bg-[linear-gradient(135deg,#2563EB,#1D4ED8)] text-white"
-                        : "border border-white/70 bg-white/90 text-slate-800 backdrop-blur-xl"
+                        ? "border border-fuchsia-300/15 bg-[linear-gradient(135deg,rgba(236,72,153,0.22),rgba(79,70,229,0.38))] text-white backdrop-blur-xl"
+                        : "border border-white/10 bg-white/8 text-white backdrop-blur-xl"
                     }`}
                   >
-                    {!isOwn && (
-                      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.06),transparent_38%)]" />
-                    )}
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_34%)]" />
 
                     <div className="relative z-10">
-                      <p className="wrap-break-word whitespace-pre-wrap text-[14px] leading-6">
+                      <p className="whitespace-pre-wrap wrap-break-word text-[14px] leading-6">
                         {message.text}
                       </p>
 
-                      <div className="mt-2.5 flex items-center gap-2">
+                      <div className="mt-2 flex items-center justify-end gap-2">
                         <span
-                          className={`text-[11px] font-medium ${
-                            isOwn ? "text-blue-100" : "text-slate-400"
+                          className={`text-[11px] ${
+                            isOwn ? "text-pink-100/80" : "text-slate-300/70"
                           }`}
                         >
-                          {message.messageType === "initial_proof"
-                            ? "Proof Message"
-                            : "Message"}
+                          {formatTime(message.createdAt)}
                         </span>
+
+                        <MessageTicks isOwn={isOwn} isSeen={isSeen} />
                       </div>
                     </div>
                   </motion.div>
@@ -413,19 +609,20 @@ export default function ChatWindow({ conversation, onBack }) {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 18 }}
-              className="mt-4 overflow-hidden rounded-[28px] border border-amber-200/80 bg-[linear-gradient(135deg,#FFF7ED,#FEF3C7)] p-5 shadow-[0_16px_38px_rgba(245,158,11,0.12)]"
+              className="mt-5 rounded-3xl border border-amber-300/15 bg-[linear-gradient(135deg,rgba(251,191,36,0.12),rgba(180,83,9,0.08))] p-5 shadow-[0_16px_38px_rgba(0,0,0,0.12)] backdrop-blur-xl"
             >
-              <div className="mb-3 flex items-center gap-2 text-amber-700">
-                <motion.div variants={floatingIcon} animate="animate">
+              <div className="mb-3 flex items-center gap-2 text-amber-200">
+                <motion.div variants={floatSoft} animate="animate">
                   <Clock3 className="h-5 w-5" />
                 </motion.div>
-                <h4 className="text-base font-bold text-slate-900">
-                  Pending Request
+                <h4 className="text-base font-bold text-white">
+                  Pending request
                 </h4>
               </div>
 
-              <p className="text-sm leading-6 text-slate-600">
-                Accept to unlock full conversation or reject to close it.
+              <p className="text-sm leading-6 text-slate-200">
+                Accept to unlock the full conversation or reject to close this
+                request.
               </p>
 
               <div className="mt-4 flex flex-wrap gap-3">
@@ -434,7 +631,7 @@ export default function ChatWindow({ conversation, onBack }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleAccept}
                   disabled={loading}
-                  className="flex items-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#16A34A,#15803D)] px-5 py-2.5 font-semibold text-white shadow-[0_10px_24px_rgba(22,163,74,0.25)]"
+                  className="flex items-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#16A34A,#15803D)] px-5 py-2.5 font-semibold text-white shadow-[0_10px_24px_rgba(22,163,74,0.26)]"
                 >
                   <CheckCircle2 className="h-4 w-4" />
                   {loading ? "Processing..." : "Accept"}
@@ -445,7 +642,7 @@ export default function ChatWindow({ conversation, onBack }) {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleReject}
                   disabled={loading}
-                  className="flex items-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#EF4444,#DC2626)] px-5 py-2.5 font-semibold text-white shadow-[0_10px_24px_rgba(239,68,68,0.22)]"
+                  className="flex items-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#EF4444,#DC2626)] px-5 py-2.5 font-semibold text-white shadow-[0_10px_24px_rgba(239,68,68,0.24)]"
                 >
                   <XCircle className="h-4 w-4" />
                   {loading ? "Processing..." : "Reject"}
@@ -461,10 +658,10 @@ export default function ChatWindow({ conversation, onBack }) {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 18 }}
-              className="mt-4 flex items-center gap-2 rounded-[22px] border border-blue-200 bg-blue-50/90 p-4 text-sm text-blue-700 shadow-[0_10px_26px_rgba(37,99,235,0.08)]"
+              className="mt-5 flex items-center gap-2 rounded-[20px] border border-blue-300/15 bg-blue-400/8 p-4 text-sm text-blue-100 shadow-[0_10px_26px_rgba(0,0,0,0.10)] backdrop-blur-md"
             >
               <Clock3 className="h-4 w-4" />
-              Waiting for report owner response
+              Waiting for the report owner to respond.
             </motion.div>
           )}
         </AnimatePresence>
@@ -475,7 +672,7 @@ export default function ChatWindow({ conversation, onBack }) {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 18 }}
-              className="mt-4 flex items-center gap-2 rounded-[22px] border border-rose-200 bg-rose-50/95 p-4 text-sm text-rose-700 shadow-[0_10px_26px_rgba(244,63,94,0.08)]"
+              className="mt-5 flex items-center gap-2 rounded-[20px] border border-rose-300/15 bg-rose-400/8 p-4 text-sm text-rose-100 shadow-[0_10px_26px_rgba(0,0,0,0.10)] backdrop-blur-md"
             >
               <XCircle className="h-4 w-4" />
               This request was rejected. You cannot send more messages here.
@@ -484,16 +681,16 @@ export default function ChatWindow({ conversation, onBack }) {
         </AnimatePresence>
       </div>
 
-      {/* Input */}
+      {/* input */}
       {conversation.status === "accepted" && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 px-3 pb-3 md:px-4 md:pb-4"
+          className="relative z-10 border-t border-white/10 bg-white/6 px-3 pb-3 pt-3 backdrop-blur-xl md:px-4 md:pb-4"
         >
           <div className="flex items-end gap-3">
-            <div className="flex flex-1 items-end gap-3 rounded-2xl border border-white/40 bg-white/70 px-4 py-3 shadow-[0_8px_30px_rgba(15,23,42,0.08)] backdrop-blur-md transition-all duration-300 focus-within:border-blue-400">
-              <MessageSquareText className="mb-1 h-5 w-5 text-blue-500" />
+            <div className="flex flex-1 items-end gap-3 rounded-[22px] border border-white/10 bg-white/8 px-4 py-3 shadow-[0_8px_30px_rgba(0,0,0,0.12)] backdrop-blur-md transition-all duration-300 focus-within:border-pink-300/25">
+              <MessageSquareText className="mb-1 h-5 w-5 text-pink-200" />
 
               <textarea
                 rows={1}
@@ -501,15 +698,15 @@ export default function ChatWindow({ conversation, onBack }) {
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Type your message..."
-                className="flex-1 resize-none bg-transparent text-[14px] leading-6 text-slate-800 outline-none placeholder:text-slate-400"
+                className="max-h-28 flex-1 resize-none bg-transparent text-[14px] leading-6 text-white outline-none placeholder:text-slate-300"
               />
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.08, rotate: 2 }}
+              whileHover={{ scale: 1.08, rotate: 8 }}
               whileTap={{ scale: 0.92 }}
               onClick={handleSendMessage}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(135deg,#2563EB,#1D4ED8)] text-white shadow-[0_10px_25px_rgba(37,99,235,0.35)]"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[linear-gradient(135deg,#ec4899,#4f46e5)] text-white shadow-[0_10px_25px_rgba(99,102,241,0.34)]"
             >
               <SendHorizontal className="h-5 w-5" />
             </motion.button>
