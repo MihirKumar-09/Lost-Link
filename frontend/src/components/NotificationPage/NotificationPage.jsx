@@ -203,7 +203,7 @@ export default function NotificationsPage() {
               whileHover={{ y: -2, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleMarkAllRead}
-              className="inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm"
+              className="cursor-pointer inline-flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm"
             >
               Mark all as read
               {totalUnread > 0 && (
@@ -248,7 +248,7 @@ export default function NotificationsPage() {
                     <div className="absolute left-0 top-0 h-full w-1.5 bg-blue-500" />
                   )}
 
-                  <div className="flex items-start gap-4">
+                  <div className="cursor-pointer flex items-start gap-4">
                     <div
                       className={`mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border shadow-sm ${
                         unread
@@ -259,7 +259,7 @@ export default function NotificationsPage() {
                       {getNotificationIcon(latest?.type)}
                     </div>
 
-                    <div className="min-w-0 flex-1">
+                    <div className=" min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">

@@ -344,7 +344,7 @@ export default function SavedItemSection() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
-                      className="flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-md transition-all duration-300 group-hover:bg-cyan-50"
+                      className="cursor-pointer flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-md transition-all duration-300 group-hover:bg-cyan-50"
                     >
                       View Details
                       <ArrowUpRight size={16} />
@@ -355,7 +355,7 @@ export default function SavedItemSection() {
                     whileHover={{ scale: 1.06 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => handleRemoveFavorite(item._id)}
-                    className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 transition hover:bg-pink-500/10"
+                    className="cursor-pointer flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 transition hover:bg-pink-500/10"
                   >
                     <Heart size={20} className="fill-pink-500 text-pink-500" />
                   </motion.button>

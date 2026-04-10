@@ -367,7 +367,7 @@ export default function AllReportCards({ filters }) {
                         <motion.button
                           whileHover={{ x: 2 }}
                           whileTap={{ scale: 0.96 }}
-                          className="inline-flex items-center gap-2 rounded-full bg-[#3358D4] px-5 py-3 text-sm font-bold text-white shadow-[0_10px_25px_rgba(51,88,212,0.28)] transition hover:bg-[#2948b6]"
+                          className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-[#3358D4] px-5 py-3 text-sm font-bold text-white shadow-[0_10px_25px_rgba(51,88,212,0.28)] transition hover:bg-[#2948b6]"
                         >
                           Details
                           <ArrowRight size={18} />

@@ -170,7 +170,7 @@ export default function Footer() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.96 }}
-                  className="shrink-0 rounded-2xl bg-linear-to-r from-[#EC5B13] to-[#ff7b39] px-4 py-3 font-semibold text-white shadow-[0_10px_25px_rgba(236,91,19,0.35)] transition"
+                  className="cursor-pointer shrink-0 rounded-2xl bg-linear-to-r from-[#EC5B13] to-[#ff7b39] px-4 py-3 font-semibold text-white shadow-[0_10px_25px_rgba(236,91,19,0.35)] transition"
                 >
                   <span className="flex items-center gap-2 text-sm">
                     Join <Send size={16} />
@@ -194,7 +194,7 @@ export default function Footer() {
             onClick={handleClick}
             whileHover={{ scale: 1.12, y: -5 }}
             whileTap={{ scale: 0.95 }}
-            className="group inline-flex h-12 w-12 items-center justify-center self-start rounded-full bg-linear-to-br from-[#3D63F2] to-[#2448d4] shadow-[0_12px_30px_rgba(61,99,242,0.4)] transition sm:self-auto"
+            className="cursor-pointer group inline-flex h-12 w-12 items-center justify-center self-start rounded-full bg-linear-to-br from-[#3D63F2] to-[#2448d4] shadow-[0_12px_30px_rgba(61,99,242,0.4)] transition sm:self-auto"
           >
             <ArrowUp className="text-white transition duration-300 group-hover:-translate-y-0.5" />
           </motion.button>

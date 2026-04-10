@@ -66,21 +66,21 @@ export default function FilterSection({
                 className="w-full cursor-pointer bg-transparent text-sm font-medium text-gray-800 outline-none"
               >
                 <option value="">Select Category</option>
-                <option value="All">All</option>
-                <option value="Phones">Phones</option>
-                <option value="Tablets">Tablets</option>
-                <option value="Wallets">Wallets</option>
-                <option value="Keys">Keys</option>
-                <option value="Jewelries">Jewelries</option>
-                <option value="Laptops">Laptops</option>
-                <option value="Briefcase">Briefcase</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Clothings">Clothings</option>
-                <option value="Watches">Watches</option>
-                <option value="Documents">Documents</option>
-                <option value="Pets">Pets</option>
-                <option value="Others">Others</option>
+                <option value="all">All</option>
+                <option value="phones">Phones</option>
+                <option value="tablets">Tablets</option>
+                <option value="wallets">Wallets</option>
+                <option value="keys">Keys</option>
+                <option value="jewelries">Jewelries</option>
+                <option value="laptop">Laptops</option>
+                <option value="briefcase">Briefcase</option>
+                <option value="electronics">Electronics</option>
+                <option value="accessories">Accessories</option>
+                <option value="clothings">Clothings</option>
+                <option value="watches">Watches</option>
+                <option value="documents">Documents</option>
+                <option value="pets">Pets</option>
+                <option value="others">Others</option>
               </select>
             </motion.div>
 

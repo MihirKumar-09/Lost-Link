@@ -281,7 +281,7 @@ export default function ConversationList({
         </div>
 
         {/* list */}
-        <div className="flex-1 overflow-y-auto px-2 py-2">
+        <div className=" flex-1 overflow-y-auto px-2 py-2">
           {conversations.length === 0 ? (
             <div className="mx-2 mt-4 bg-white/8 p-6 text-center backdrop-blur-md">
               <h3 className="text-lg font-semibold text-white">
@@ -312,7 +312,7 @@ export default function ConversationList({
                   whileTap={{ scale: 0.99 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => setSelectedConversation(conversation)}
-                  className={`relative flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-300 ${
+                  className={`cursor-pointer relative flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-300 ${
                     isSelected
                       ? "bg-white/10 backdrop-blur-sm"
                       : "bg-transparent"
