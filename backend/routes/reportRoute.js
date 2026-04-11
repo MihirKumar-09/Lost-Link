@@ -103,4 +103,34 @@ router.get("/my-reports", isLoggedIn, async (req, res) => {
   }
 });
 
+//!==========UPDATE STATUS=============
+router.patch("/updateStatus/:id", isLoggedIn, async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // Validate status;
+    if (!["open", "closed"].includes(status)) {
+      return res.status(400).json({ message: "Invalid Status" });
+    }
+
+    const report = await Report.findById(req.params.id);
+
+    if (!report) {
+      return res.status(404).json({ message: "Report not found" });
+    }
+
+    // Owner check;
+    if (report.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    report.status = status;
+    await report.save();
+
+    return res.json({ message: "Status Update", report });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;

@@ -9,6 +9,8 @@ import {
   Shapes,
   TimerReset,
   Trash,
+  RotateCcw,
+  X,
 } from "lucide-react";
 import { cn } from "../../lib/utils.js";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -169,6 +171,38 @@ export default function DetailsSection({ productDetails }) {
       y: 0,
       transition: { duration: 0.45, ease: "easeOut" },
     },
+  };
+
+  const handleStatusToggle = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/reports/updateStatus/${productDetails._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            status: productDetails.status === "open" ? "closed" : "open",
+          }),
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to update status");
+      }
+
+      toast.success("Status updated successfully");
+
+      // Refresh the page;
+      window.location.reload();
+    } catch (err) {
+      console.log("Status update error:", err);
+      toast.error(err.message || "Failed to update status");
+    }
   };
 
   return (
@@ -342,6 +376,98 @@ export default function DetailsSection({ productDetails }) {
                   >
                     <Trash />
                   </motion.button>
+                )}
+
+                {isOwner && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative"
+                  >
+                    <motion.button
+                      type="button"
+                      onClick={handleStatusToggle}
+                      title={
+                        productDetails.status === "open"
+                          ? "Mark as Closed"
+                          : "Reopen Report"
+                      }
+                      whileHover={{ y: -2, scale: 1.04 }}
+                      whileTap={{ scale: 0.92 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 280,
+                        damping: 18,
+                      }}
+                      className={cn(
+                        "group relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border bg-white/92 shadow-[0_10px_24px_rgba(15,23,42,0.12)] backdrop-blur-xl cursor-pointer",
+                        productDetails.status === "open"
+                          ? "border-emerald-100 hover:border-emerald-200"
+                          : "border-sky-100 hover:border-sky-200",
+                      )}
+                    >
+                      {/* soft premium glow */}
+                      <span
+                        className={cn(
+                          "pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100",
+                          productDetails.status === "open"
+                            ? "bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.18),transparent_70%)]"
+                            : "bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.18),transparent_70%)]",
+                        )}
+                      />
+
+                      {/* moving shine */}
+                      <motion.span
+                        aria-hidden="true"
+                        initial={{ x: "-140%", opacity: 0 }}
+                        whileHover={{ x: "160%", opacity: 0.45 }}
+                        transition={{ duration: 0.75, ease: "easeInOut" }}
+                        className="pointer-events-none absolute inset-y-1 left-0 w-8 rotate-12 rounded-full bg-white/70 blur-md"
+                      />
+
+                      {/* subtle ring */}
+                      <span
+                        className={cn(
+                          "absolute inset-0.75 rounded-full",
+                          productDetails.status === "open"
+                            ? "border border-emerald-100/80"
+                            : "border border-sky-100/80",
+                        )}
+                      />
+
+                      {/* icon */}
+                      <motion.span
+                        key={productDetails.status}
+                        initial={{ scale: 0.7, rotate: -18, opacity: 0 }}
+                        animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                        transition={{ duration: 0.28, ease: "easeOut" }}
+                        className="relative z-10"
+                      >
+                        {productDetails.status === "open" ? (
+                          <X
+                            className="h-5.5 w-5.5 text-emerald-600"
+                            strokeWidth={2.1}
+                          />
+                        ) : (
+                          <RotateCcw
+                            className="h-5.25 w-5.25 text-sky-600"
+                            strokeWidth={2.1}
+                          />
+                        )}
+                      </motion.span>
+                    </motion.button>
+
+                    {/* premium tooltip */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      whileHover={{ opacity: 1, y: 0 }}
+                      className="pointer-events-none absolute -bottom-11 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/70 bg-[#0F172A] px-3 py-1.5 text-[11px] font-medium text-white shadow-lg opacity-0 transition"
+                    >
+                      {productDetails.status === "open"
+                        ? "Mark as Closed"
+                        : "Reopen Report"}
+                    </motion.div>
+                  </motion.div>
                 )}
               </div>
             </motion.div>
