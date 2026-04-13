@@ -89,79 +89,67 @@ export default function MyFoundItemsSection() {
     return `${months} month ago`;
   };
 
-  const AnimatedBackground = () => (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-      <motion.div
-        animate={{
-          x: [0, 30, -20, 0],
-          y: [0, -20, 20, 0],
-          scale: [1, 1.08, 0.96, 1],
-        }}
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute -left-16 top-0 h-56 w-56 rounded-full bg-sky-500/10 blur-3xl dark:bg-sky-400/10"
-      />
-
-      <motion.div
-        animate={{
-          x: [0, -40, 15, 0],
-          y: [0, 25, -15, 0],
-          scale: [1, 0.95, 1.08, 1],
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute right-0 top-10 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl dark:bg-cyan-400/10"
-      />
-
-      <motion.div
-        animate={{
-          x: [0, 20, -30, 0],
-          y: [0, -10, 20, 0],
-          scale: [1, 1.05, 0.92, 1],
-        }}
-        transition={{
-          duration: 16,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute bottom-0 left-1/3 h-52 w-52 rounded-full bg-violet-500/10 blur-3xl dark:bg-indigo-400/10"
-      />
-
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.08),transparent_30%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(96,165,250,0.10),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(34,211,238,0.10),transparent_30%)]" />
-    </div>
-  );
+  const floatingBlob = {
+    animate: {
+      x: [0, 28, -18, 0],
+      y: [0, -26, 18, 0],
+      scale: [1, 1.08, 0.95, 1],
+    },
+    transition: {
+      duration: 12,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  };
 
   if (loading) {
     return (
-      <section className="relative min-h-[70vh] overflow-hidden rounded-4xl">
-        <AnimatedBackground />
+      <section
+        className="
+          relative min-h-[70vh] overflow-hidden border p-4 md:p-6
+          border-sky-200/60
+          bg-[linear-gradient(135deg,#f8fbff_0%,#eef5ff_30%,#fdfcff_65%,#eef8ff_100%)]
+          dark:border-cyan-500/15
+          dark:bg-[linear-gradient(135deg,#031126_0%,#071a35_30%,#0a1e3e_58%,#0a1730_100%)]
+        "
+      >
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <motion.div
+            variants={floatingBlob}
+            animate="animate"
+            className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl dark:bg-cyan-400/12"
+          />
+          <motion.div
+            variants={floatingBlob}
+            animate="animate"
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl dark:bg-blue-500/12"
+          />
+          <motion.div
+            variants={floatingBlob}
+            animate="animate"
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl dark:bg-emerald-400/8"
+          />
+          <div className="absolute inset-0 opacity-[0.12] dark:opacity-[0.07] bg-[linear-gradient(rgba(148,163,184,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.14)_1px,transparent_1px)] bg-size-[28px_28px]" />
+          <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/70 to-transparent dark:via-cyan-300/80" />
+        </div>
 
         <div className="relative flex min-h-[70vh] items-center justify-center px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="
-              relative flex w-full max-w-md flex-col items-center rounded-[30px]
-              border border-slate-200/80 bg-white/70 px-8 py-12
-              shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl
-              dark:border-white/10 dark:bg-white/5 dark:shadow-[0_20px_60px_rgba(0,0,0,0.28)]
-            "
+            className="relative flex w-full max-w-md flex-col items-center rounded-[30px] border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(244,248,255,0.76))] px-8 py-12 shadow-[0_24px_60px_rgba(59,130,246,0.10)] backdrop-blur-xl dark:border-white/10 dark:bg-[linear-gradient(145deg,rgba(10,24,45,0.84),rgba(11,31,56,0.72))] dark:shadow-[0_24px_60px_rgba(0,0,0,0.30)]"
           >
-            <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/80 to-transparent dark:via-blue-300/80" />
+            <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/80 to-transparent dark:via-cyan-300/80" />
 
-            <div className="relative mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-sky-300/30 bg-sky-500/10 dark:border-blue-300/20 dark:bg-blue-400/10">
+            <div className="relative mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-sky-300/35 bg-sky-500/10 dark:border-cyan-300/20 dark:bg-cyan-400/10">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
-                className="absolute h-20 w-20 rounded-full border-[3px] border-slate-300/40 border-t-sky-500 dark:border-white/10 dark:border-t-blue-300"
+                className="absolute h-20 w-20 rounded-full border-[3px] border-slate-300/40 border-t-sky-500 dark:border-white/10 dark:border-t-cyan-300"
               />
-              <PackageCheck className="h-9 w-9 text-sky-700 dark:text-blue-200" />
+              <PackageCheck className="h-9 w-9 text-sky-700 dark:text-cyan-200" />
             </div>
 
             <p className="text-lg font-semibold text-slate-800 dark:text-white">
@@ -177,24 +165,56 @@ export default function MyFoundItemsSection() {
   }
 
   return (
-    <section className="relative space-y-6 overflow-hidden rounded-4xl">
-      <AnimatedBackground />
+    <section
+      className="
+        relative h-full space-y-6 border p-4 md:p-6
+        border-sky-200/60
+        bg-[linear-gradient(135deg,#f8fbff_0%,#eef5ff_30%,#fdfcff_65%,#eef8ff_100%)]
+        shadow-[0_20px_70px_rgba(148,163,184,0.18)]
+        dark:border-cyan-500/15
+        dark:bg-[linear-gradient(135deg,#031126_0%,#071a35_30%,#0a1e3e_58%,#0a1730_100%)]
+        dark:shadow-[0_20px_70px_rgba(2,6,23,0.42)]
+      "
+    >
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <motion.div
+          variants={floatingBlob}
+          animate="animate"
+          className="absolute -left-20 top-0 h-80 w-80 rounded-full bg-sky-300/25 blur-3xl dark:bg-cyan-400/12"
+        />
+        <motion.div
+          variants={floatingBlob}
+          animate="animate"
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute right-0 top-10 h-96 w-96 rounded-full bg-blue-300/20 blur-3xl dark:bg-blue-500/12"
+        />
+        <motion.div
+          variants={floatingBlob}
+          animate="animate"
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-0 left-1/4 h-80 w-80 rounded-full bg-cyan-300/20 blur-3xl dark:bg-emerald-400/8"
+        />
+        <motion.div
+          animate={{ opacity: [0.35, 0.55, 0.35] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.10),transparent_30%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.10),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.10),transparent_28%)]"
+        />
+        <div className="absolute inset-0 opacity-[0.12] dark:opacity-[0.07] bg-[linear-gradient(rgba(148,163,184,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.14)_1px,transparent_1px)] bg-size-[28px_28px]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/70 to-transparent dark:via-cyan-300/80" />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="
-          relative overflow-hidden rounded-[28px] border p-5 backdrop-blur-xl md:p-6
-          border-slate-200/80 bg-white/70 shadow-[0_10px_40px_rgba(15,23,42,0.08)]
-          dark:border-white/10 dark:bg-white/5 dark:shadow-[0_10px_40px_rgba(0,0,0,0.22)]
-        "
+        className="relative overflow-hidden rounded-[28px] border p-5 backdrop-blur-xl md:p-6 border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(244,248,255,0.76))] shadow-[0_16px_50px_rgba(59,130,246,0.10)] dark:border-white/10 dark:bg-[linear-gradient(145deg,rgba(10,24,45,0.82),rgba(11,31,56,0.70))] dark:shadow-[0_14px_45px_rgba(0,0,0,0.24)]"
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/70 to-transparent dark:via-blue-300/70" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.12),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.10),transparent_30%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,0.10),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.10),transparent_28%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/70 to-transparent dark:via-cyan-300/70" />
 
         <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-300/30 bg-sky-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-sky-700 dark:border-blue-300/15 dark:bg-blue-400/10 dark:text-blue-200">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-300/35 bg-sky-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-sky-700 dark:border-cyan-300/15 dark:bg-cyan-400/10 dark:text-cyan-200">
               <BadgeCheck size={14} />
               Found Reports
             </div>
@@ -211,13 +231,9 @@ export default function MyFoundItemsSection() {
 
           <motion.div
             whileHover={{ y: -2, scale: 1.02 }}
-            className="
-              inline-flex w-fit items-center gap-3 rounded-2xl border px-4 py-3
-              border-slate-200/80 bg-white/70 shadow-[0_8px_30px_rgba(15,23,42,0.08)]
-              dark:border-white/10 dark:bg-white/6 dark:shadow-[0_8px_30px_rgba(0,0,0,0.18)]
-            "
+            className="inline-flex w-fit items-center gap-3 rounded-2xl border border-white/60 bg-white/75 px-4 py-3 shadow-[0_12px_35px_rgba(15,23,42,0.10)] backdrop-blur-xl dark:border-white/10 dark:bg-white/6 dark:shadow-[0_8px_30px_rgba(0,0,0,0.18)]"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-br from-sky-500/15 to-cyan-500/15 text-sky-700 shadow-[0_0_25px_rgba(14,165,233,0.12)] dark:from-blue-400/20 dark:to-cyan-400/20 dark:text-blue-200 dark:shadow-[0_0_25px_rgba(59,130,246,0.15)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(14,165,233,0.16),rgba(99,102,241,0.14))] text-sky-700 shadow-[0_0_25px_rgba(59,130,246,0.12)] dark:text-cyan-200 dark:shadow-[0_0_25px_rgba(34,211,238,0.15)]">
               <FolderOpen size={20} />
             </div>
             <div>
@@ -237,13 +253,11 @@ export default function MyFoundItemsSection() {
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: "easeOut" }}
-          className="
-            relative overflow-hidden rounded-[30px] border border-dashed px-6 py-14 text-center backdrop-blur-xl
-            border-slate-300/80 bg-white/70 shadow-[0_14px_45px_rgba(15,23,42,0.08)]
-            dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_45px_rgba(0,0,0,0.22)]
-          "
+          className="relative overflow-hidden rounded-[30px] border border-dashed border-slate-300/80 bg-white/70 px-6 py-14 text-center shadow-[0_14px_45px_rgba(15,23,42,0.08)] backdrop-blur-xl dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_45px_rgba(0,0,0,0.22)]"
         >
-          <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border border-slate-200/80 bg-white/80 text-sky-700 dark:border-white/10 dark:bg-white/6 dark:text-blue-200">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(14,165,233,0.08),transparent_28%)] dark:bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_28%)]" />
+
+          <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-3xl border border-slate-200/80 bg-white/80 text-sky-700 dark:border-white/10 dark:bg-white/6 dark:text-cyan-200">
             <ShieldCheck size={28} />
           </div>
 
@@ -257,7 +271,11 @@ export default function MyFoundItemsSection() {
           </p>
         </motion.div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <div
+          className={`grid grid-cols-1 gap-5 ${
+            foundReports.length > 1 ? "xl:grid-cols-2" : ""
+          }`}
+        >
           {foundReports.map((item, index) => (
             <motion.article
               key={item._id}
@@ -269,11 +287,7 @@ export default function MyFoundItemsSection() {
                 ease: "easeOut",
               }}
               whileHover={{ y: -6, scale: 1.01 }}
-              className="
-                group relative overflow-hidden rounded-[30px] border p-5 backdrop-blur-xl md:p-6
-                border-slate-200/80 bg-white/72 shadow-[0_14px_40px_rgba(15,23,42,0.08)]
-                dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_40px_rgba(0,0,0,0.22)]
-              "
+              className="group relative overflow-hidden rounded-[30px] border p-5 backdrop-blur-xl md:p-6 border-white/60 bg-white/72 shadow-[0_14px_40px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5 dark:shadow-[0_14px_40px_rgba(0,0,0,0.22)]"
             >
               <motion.div
                 animate={{
@@ -289,7 +303,7 @@ export default function MyFoundItemsSection() {
               />
 
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.55),transparent_30%)] opacity-60 transition duration-500 group-hover:opacity-90 dark:bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_30%)]" />
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-slate-300 to-transparent opacity-80 dark:via-white/40 dark:opacity-50" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-300 to-transparent opacity-80 dark:via-cyan-300 dark:opacity-50" />
 
               <div className="relative flex flex-col gap-5">
                 <div className="flex items-start gap-4">
@@ -414,11 +428,7 @@ export default function MyFoundItemsSection() {
                   {item?._id && (
                     <Link
                       to={`/lostItem/${item._id}`}
-                      className="
-                        group/link inline-flex items-center justify-center gap-2 rounded-2xl border px-4 py-2.5 text-sm font-medium transition
-                        border-slate-200/80 bg-white/80 text-slate-700 hover:border-cyan-400/30 hover:bg-cyan-500/10 hover:text-cyan-700
-                        dark:border-white/10 dark:bg-white/6 dark:text-white/80 dark:hover:border-cyan-300/20 dark:hover:bg-cyan-400/10 dark:hover:text-cyan-200
-                      "
+                      className="group/link inline-flex items-center justify-center gap-2 rounded-2xl border px-4 py-2.5 text-sm font-medium transition border-slate-200/80 bg-white/80 text-slate-700 hover:border-cyan-400/30 hover:bg-cyan-500/10 hover:text-cyan-700 dark:border-white/10 dark:bg-white/6 dark:text-white/80 dark:hover:border-cyan-300/20 dark:hover:bg-cyan-400/10 dark:hover:text-cyan-200"
                     >
                       View Details
                       <ArrowUpRight

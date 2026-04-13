@@ -36,7 +36,6 @@ export default function RightSection({ active }) {
       >
         {/* background layer */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {/* light theme blobs */}
           <motion.div
             animate={{
               x: [0, 26, -12, 0],
@@ -73,7 +72,6 @@ export default function RightSection({ active }) {
             className="absolute inset-0 dark:hidden bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.10),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.08),transparent_32%)]"
           />
 
-          {/* dark theme blobs */}
           <motion.div
             animate={{
               x: [0, 24, -10, 0],
@@ -110,28 +108,9 @@ export default function RightSection({ active }) {
             className="absolute inset-0 hidden dark:block bg-[radial-gradient(circle_at_top_right,rgba(45,212,191,0.10),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.10),transparent_32%)]"
           />
 
-          {/* texture */}
           <div className="absolute inset-0 opacity-[0.12] dark:opacity-[0.07] bg-[linear-gradient(rgba(148,163,184,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.14)_1px,transparent_1px)] bg-size-[28px_28px]" />
 
-          {/* top premium line */}
           <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/70 to-transparent dark:via-cyan-300/90" />
-
-          {/* floating particles */}
-          <motion.span
-            animate={{ y: [0, -10, 0], opacity: [0.25, 0.7, 0.25] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute left-[12%] top-[18%] h-2 w-2 rounded-full bg-sky-400/70 shadow-[0_0_20px_rgba(56,189,248,0.8)] dark:bg-cyan-300/70"
-          />
-          <motion.span
-            animate={{ y: [0, 12, 0], opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute right-[18%] top-[28%] h-2.5 w-2.5 rounded-full bg-blue-400/70 shadow-[0_0_20px_rgba(96,165,250,0.8)] dark:bg-blue-300/70"
-          />
-          <motion.span
-            animate={{ x: [0, 10, 0], opacity: [0.2, 0.55, 0.2] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-[22%] left-[26%] h-1.5 w-1.5 rounded-full bg-cyan-300/70 shadow-[0_0_18px_rgba(103,232,249,0.8)] dark:bg-sky-200/70"
-          />
         </div>
 
         {/* content */}

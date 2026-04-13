@@ -120,7 +120,7 @@ export default function ProfilePage() {
                 "
               >
                 <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-sky-400/60 to-transparent dark:via-cyan-300/50" />
-                <div className="h-full overflow-y-auto px-3 py-3 lg:px-4 lg:py-4">
+                <div className="h-full overflow-y-auto">
                   <RightSection active={active} />
                 </div>
               </div>
