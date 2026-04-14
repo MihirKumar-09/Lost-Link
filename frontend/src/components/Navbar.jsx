@@ -9,6 +9,8 @@ import {
   ChevronDown,
   LogIn,
   UserPlus,
+  Sun,
+  MoonStar,
 } from "lucide-react";
 import {
   Link,
@@ -21,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUnreadCounts } from "../services/notificationService";
 import { useSocket } from "../Context/SocketContext";
+import { useTheme } from "../Context/ThemeContext";
 
 export default function Navbar() {
   const location = useLocation();
@@ -36,6 +39,9 @@ export default function Navbar() {
   const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
   const [messageUnreadCount, setMessageUnreadCount] = useState(0);
   const { socket } = useSocket();
+
+  const { preference, setPreference } = useTheme();
+  const isDark = preference === "dark";
 
   const [searchText, setSearchText] = useState(
     searchParams.get("search") || "",
@@ -113,6 +119,11 @@ export default function Navbar() {
       pathname: location.pathname,
       search: params.toString(),
     });
+  };
+
+  const handleThemeToggle = () => {
+    const nextTheme = isDark ? "light" : "dark";
+    setPreference(nextTheme);
   };
 
   useEffect(() => {
@@ -228,6 +239,38 @@ export default function Navbar() {
             className="relative flex items-center gap-2 md:gap-3"
             ref={menuRef}
           >
+            {/* Theme Toggle Button */}
+            <motion.button
+              type="button"
+              onClick={handleThemeToggle}
+              whileHover={{ y: -2, scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-white/10 dark:bg-white/6 dark:shadow-[0_8px_20px_rgba(0,0,0,0.22)] dark:hover:bg-white/8"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={isDark ? "sun" : "moon"}
+                  initial={{ rotate: -20, opacity: 0, scale: 0.7 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 20, opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center justify-center"
+                >
+                  {isDark ? (
+                    <Sun
+                      size={19}
+                      className="text-amber-500 dark:text-amber-300"
+                    />
+                  ) : (
+                    <MoonStar
+                      size={19}
+                      className="text-slate-700 dark:text-slate-100"
+                    />
+                  )}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
+
             {user && (
               <>
                 <motion.button
