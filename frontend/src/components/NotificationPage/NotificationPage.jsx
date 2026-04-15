@@ -7,6 +7,7 @@ import {
   CheckCircle,
   XCircle,
   ChevronRight,
+  ArrowLeft,
 } from "lucide-react";
 import {
   getNotifications,
@@ -35,10 +36,8 @@ function AnimatedBackground() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       {/* LIGHT MODE SCENE */}
       <div className="absolute inset-0 dark:hidden">
-        {/* sky base */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#f8fbff_0%,#eef6ff_28%,#eaf3ff_48%,#f8fafc_75%,#eef2f7_100%)]" />
 
-        {/* moving sunlight */}
         <motion.div
           animate={{
             x: [0, 80, -30, 0],
@@ -53,7 +52,6 @@ function AnimatedBackground() {
           className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-yellow-300/40 blur-3xl"
         />
 
-        {/* sun */}
         <motion.div
           animate={{
             x: [0, -50, 25, 0],
@@ -89,7 +87,6 @@ function AnimatedBackground() {
           </div>
         </motion.div>
 
-        {/* sun rays */}
         <motion.div
           animate={{
             rotate: [0, 8, -4, 0],
@@ -103,7 +100,6 @@ function AnimatedBackground() {
           className="absolute right-[2%] top-[-8%] h-128 w-lg rounded-full bg-[conic-gradient(from_90deg_at_50%_50%,rgba(255,220,120,0.00)_0deg,rgba(255,220,120,0.18)_35deg,rgba(255,220,120,0.00)_70deg,rgba(255,220,120,0.14)_120deg,rgba(255,220,120,0.00)_180deg,rgba(255,220,120,0.12)_240deg,rgba(255,220,120,0.00)_300deg,rgba(255,220,120,0.16)_340deg,rgba(255,220,120,0.00)_360deg)] blur-2xl"
         />
 
-        {/* drifting clouds */}
         {clouds.map((cloud) => (
           <motion.div
             key={cloud.id}
@@ -129,7 +125,6 @@ function AnimatedBackground() {
           </motion.div>
         ))}
 
-        {/* ambient moving glow */}
         <motion.div
           animate={{
             x: [0, -120, 60, 0],
@@ -143,16 +138,13 @@ function AnimatedBackground() {
           className="absolute -bottom-35 left-[10%] h-112 w-md rounded-full bg-sky-300/20 blur-3xl"
         />
 
-        {/* soft floor light */}
         <div className="absolute inset-x-0 bottom-0 h-56 bg-[radial-gradient(circle_at_bottom,rgba(125,211,252,0.18),transparent_68%)]" />
       </div>
 
       {/* DARK MODE SCENE */}
       <div className="absolute inset-0 hidden dark:block">
-        {/* space base */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#07142d_0%,#030b1b_35%,#020617_65%,#01030b_100%)]" />
 
-        {/* nebula glows */}
         <motion.div
           animate={{
             x: [0, 90, -40, 0],
@@ -194,7 +186,6 @@ function AnimatedBackground() {
           className="absolute -bottom-30 left-1/3 h-96 w-[24rem] rounded-full bg-blue-500/10 blur-3xl"
         />
 
-        {/* moon */}
         <motion.div
           animate={{
             x: [0, -35, 18, 0],
@@ -213,7 +204,6 @@ function AnimatedBackground() {
             <div className="absolute left-10 top-4 h-2 w-2 rounded-full bg-slate-200/50" />
           </div>
 
-          {/* orbit ring */}
           <motion.div
             animate={{ rotate: 360 }}
             transition={{
@@ -227,7 +217,6 @@ function AnimatedBackground() {
           </motion.div>
         </motion.div>
 
-        {/* stars */}
         {stars.map((star) => (
           <motion.span
             key={star.id}
@@ -252,7 +241,6 @@ function AnimatedBackground() {
           />
         ))}
 
-        {/* shooting stars */}
         <motion.div
           animate={{
             x: [-200, 1200],
@@ -284,7 +272,6 @@ function AnimatedBackground() {
           className="absolute -left-30 top-[40%] h-0.5 w-32 rotate-20 bg-[linear-gradient(90deg,rgba(255,255,255,0),rgba(186,230,253,0.95),rgba(255,255,255,0))] blur-[1px]"
         />
 
-        {/* subtle grid */}
         <motion.div
           animate={{
             backgroundPosition: ["0% 0%", "100% 100%"],
@@ -503,6 +490,14 @@ export default function NotificationsPage() {
     }
   };
 
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   const totalUnread = notifications.filter((item) => !item.isRead).length;
 
   return (
@@ -513,33 +508,48 @@ export default function NotificationsPage() {
       <div className="pointer-events-none absolute inset-0 bg-white/40 dark:bg-black/20" />
 
       <div className="relative z-10 mx-auto max-w-5xl">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/80 bg-white/65 px-4 py-1.5 text-sm font-semibold text-blue-700 shadow-[0_8px_24px_rgba(59,130,246,0.10)] backdrop-blur-xl dark:border-cyan-400/20 dark:bg-white/6 dark:text-cyan-300"
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="flex items-start gap-3">
+            <motion.button
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35 }}
+              whileHover={{ y: -2, scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={handleBack}
+              className="inline-flex mt-1 md:hidden h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-2xl border border-slate-200/80 bg-white/75 text-slate-700 shadow-[0_10px_28px_rgba(15,23,42,0.08)] backdrop-blur-xl transition dark:border-white/10 dark:bg-white/6 dark:text-white dark:shadow-[0_14px_32px_rgba(0,0,0,0.28)]"
+              aria-label="Go back"
             >
-              Real-time inbox
-            </motion.div>
+              <ArrowLeft size={18} />
+            </motion.button>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              className="text-4xl font-black tracking-tight text-slate-900 dark:bg-[linear-gradient(135deg,#ffffff_0%,#c4b5fd_28%,#7dd3fc_60%,#ffffff_100%)] dark:bg-clip-text dark:text-transparent md:text-6xl"
-            >
-              Notifications
-            </motion.h1>
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-200/80 bg-white/65 px-4 py-1.5 text-sm font-semibold text-blue-700 shadow-[0_8px_24px_rgba(59,130,246,0.10)] backdrop-blur-xl dark:border-cyan-400/20 dark:bg-white/6 dark:text-cyan-300"
+              >
+                Real-time inbox
+              </motion.div>
 
-            <motion.p
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="mt-2 text-sm text-slate-600 dark:text-slate-300 md:text-base"
-            >
-              One user, one notification card.
-            </motion.p>
+              <motion.h1
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 }}
+                className="text-4xl font-black tracking-tight text-slate-900 dark:bg-[linear-gradient(135deg,#ffffff_0%,#c4b5fd_28%,#7dd3fc_60%,#ffffff_100%)] dark:bg-clip-text dark:text-transparent md:text-6xl"
+              >
+                Notifications
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="mt-2 text-sm text-slate-600 dark:text-slate-300 md:text-base"
+              >
+                One user, one notification card.
+              </motion.p>
+            </div>
           </div>
 
           {notifications.length > 0 && (
@@ -588,7 +598,7 @@ export default function NotificationsPage() {
                   whileHover={{ y: -4, scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={() => handleNotificationClick(group)}
-                  className={`group cursor-pointer relative w-full overflow-hidden rounded-[28px] border p-5 text-left shadow-[0_16px_40px_rgba(15,23,42,0.10)] backdrop-blur-xl transition ${
+                  className={`group relative w-full cursor-pointer overflow-hidden rounded-[28px] border p-5 text-left shadow-[0_16px_40px_rgba(15,23,42,0.10)] backdrop-blur-xl transition ${
                     unread
                       ? "border-blue-200/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.80)_0%,rgba(239,246,255,0.72)_100%)] dark:border-cyan-400/20 dark:bg-[linear-gradient(135deg,rgba(8,15,30,0.82)_0%,rgba(13,20,36,0.76)_50%,rgba(22,28,48,0.74)_100%)]"
                       : "border-slate-200/70 bg-white/60 dark:border-white/10 dark:bg-white/5"

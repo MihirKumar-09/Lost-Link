@@ -651,11 +651,7 @@ export default function SettingSection() {
                   label="Language"
                   value={form.language}
                   onChange={(e) => handleChange("language", e.target.value)}
-                  options={[
-                    { label: "English", value: "en" },
-                    { label: "Hindi", value: "hi" },
-                    { label: "Hinglish", value: "hinglish" },
-                  ]}
+                  options={[{ label: "English", value: "en" }]}
                 />
 
                 <SelectInput
