@@ -32,7 +32,7 @@ export default function ReportDetails() {
   return (
     <>
       <Navbar />
-      <section className="flex flex-col md:flex-row gap-6  justify-between px-3 sm:px-5 md:px-12 py-10 text-center bg-[#f3f2f2]">
+      <section className="flex flex-col md:flex-row gap-6  justify-between px-3 sm:px-5 md:px-12 py-10 text-center bg-[#f3f2f2] dark:bg-[#0A1A2C]">
         <ImageSection productDetails={productDetails} />
         <DetailsSection productDetails={productDetails} />
       </section>
