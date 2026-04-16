@@ -11,24 +11,23 @@ router.post("/toggle/:reportId", isLoggedIn, async (req, res) => {
     const { reportId } = req.params;
     const userId = req.user._id;
 
-    // Check is that report is exist or not?
+    // 1. Check report exists
     const reportExists = await Report.findById(reportId);
     if (!reportExists) {
       return res.status(404).json({ message: "Report not found" });
     }
 
+    // 2. Get user
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    // Check already favorite;
-    const alreadyFavorite = user.favorites.some(
-      (favId) => favId.toString() === reportId,
-    );
+    // 3. Check already favorite
+    const alreadyFavorite = user.favorites.includes(reportId);
 
     if (alreadyFavorite) {
-      user.favorites = user.favorites.filter(
-        (favId) => favId.toString() !== reportId,
-      );
-
+      user.favorites.pull(reportId);
       await user.save();
 
       return res.status(200).json({
@@ -37,28 +36,19 @@ router.post("/toggle/:reportId", isLoggedIn, async (req, res) => {
       });
     }
 
-    user.favorites.push(reportId);
+    // Prevent duplicate
+    if (!user.favorites.includes(reportId)) {
+      user.favorites.push(reportId);
+    }
+
     await user.save();
 
-    return res
-      .status(200)
-      .json({ message: "Added to favorites", isFavorite: true });
-  } catch (err) {
-    console.log("Toggle favorite error:", err);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-//!==========GET ALL FAVORITES===========
-router.get("/", isLoggedIn, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).populate("favorites");
-
     return res.status(200).json({
-      favorites: user.favorites,
+      message: "Added to favorites",
+      isFavorite: true,
     });
   } catch (err) {
-    console.log("Get favorites error:", err);
+    console.log("Toggle favorite error:", err);
     return res.status(500).json({ message: "Internal server error" });
   }
 });

@@ -1,6 +1,7 @@
 import express from "express";
 import Report from "../models/reportSchema.js";
 import isLoggedIn from "../middleware/isLogin.js";
+import Claim from "../models/Conversation.js";
 const router = express.Router();
 
 //! =========GET -> ALL REPORTS==========
@@ -130,6 +131,40 @@ router.patch("/updateStatus/:id", isLoggedIn, async (req, res) => {
     return res.json({ message: "Status Update", report });
   } catch (err) {
     return res.status(500).json({ message: err.message });
+  }
+});
+
+//!=========TRACK MY CLAIM=========
+router.get("/claims/my-claims", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const claims = await Claim.find({
+      $or: [{ claimantId: userId }, { reportOwnerId: userId }],
+    })
+      .populate("reportId", "name category image reportType status")
+      .populate("claimantId", "name email avatar")
+      .populate("reportOwnerId", "name email avatar")
+      .sort({ updatedAt: -1 });
+
+    const sentClaims = claims.filter(
+      (claim) => claim.claimantId?._id.toString() === userId.toString(),
+    );
+
+    const receivedClaims = claims.filter(
+      (claim) => claim.reportOwnerId?._id.toString() === userId.toString(),
+    );
+
+    return res.status(200).json({
+      sentClaims,
+      receivedClaims,
+    });
+  } catch (err) {
+    console.error("Error in /claims/my-claims:", err);
+    return res.status(500).json({
+      message: "Failed to fetch claims",
+      error: err.message,
+    });
   }
 });
 

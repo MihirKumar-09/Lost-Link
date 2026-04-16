@@ -221,7 +221,7 @@ export default function SavedItemSection() {
 
   if (loading) {
     return (
-      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-4">
+      <section className="relative flex min-h-[calc(100vh-127px)]  items-center justify-center overflow-hidden px-4">
         <AnimatedBackground />
 
         <motion.div
@@ -259,7 +259,7 @@ export default function SavedItemSection() {
 
   if (favorites.length === 0) {
     return (
-      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-4">
+      <section className="relative flex min-h-[calc(100vh-127px)] items-center justify-center overflow-hidden px-4">
         <AnimatedBackground />
 
         <motion.div
