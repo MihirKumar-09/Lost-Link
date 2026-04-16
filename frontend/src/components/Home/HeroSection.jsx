@@ -511,7 +511,7 @@ export default function HeroSection() {
               <motion.button
                 whileHover={{ y: -3, scale: 1.03 }}
                 whileTap={{ scale: 0.95 }}
-                className="group flex items-center gap-2 rounded-xl bg-black px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-600 dark:bg-white dark:text-black dark:hover:bg-blue-500"
+                className="cursor-pointer group flex items-center gap-2 rounded-xl bg-black px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-600 dark:bg-white dark:text-black dark:hover:bg-blue-500 dark:hover:text-white"
               >
                 Report Lost Item
                 <ArrowRight
@@ -525,7 +525,7 @@ export default function HeroSection() {
               <motion.button
                 whileHover={{ y: -3, scale: 1.03 }}
                 whileTap={{ scale: 0.95 }}
-                className="rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-semibold text-gray-800 shadow-md transition hover:bg-blue-50 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+                className="cursor-pointer rounded-xl border border-gray-300 bg-white px-6 py-3.5 text-sm font-semibold text-gray-800 shadow-md transition hover:bg-blue-50 dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
               >
                 I Found Something
               </motion.button>
