@@ -285,7 +285,7 @@ function DeleteAccountModal({ open, onClose, onConfirm, deletingAccount }) {
                   disabled={deletingAccount}
                   whileHover={deletingAccount ? {} : { y: -2 }}
                   whileTap={deletingAccount ? {} : { scale: 0.98 }}
-                  className="inline-flex items-center justify-center border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-[0_10px_25px_rgba(15,23,42,0.08)] transition-all duration-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10"
+                  className="cursor-pointer inline-flex items-center justify-center border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-[0_10px_25px_rgba(15,23,42,0.08)] transition-all duration-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10"
                 >
                   Cancel
                 </motion.button>
@@ -296,7 +296,7 @@ function DeleteAccountModal({ open, onClose, onConfirm, deletingAccount }) {
                   disabled={deletingAccount}
                   whileHover={deletingAccount ? {} : { y: -2, scale: 1.01 }}
                   whileTap={deletingAccount ? {} : { scale: 0.98 }}
-                  className=" inline-flex items-center justify-center gap-2 border border-red-500/30 bg-[linear-gradient(135deg,#ef4444,#b91c1c)] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(239,68,68,0.28)] transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-400/30 dark:bg-[linear-gradient(135deg,#f43f5e,#be123c)] dark:shadow-[0_14px_30px_rgba(244,63,94,0.32)]"
+                  className="cursor-pointer inline-flex items-center justify-center gap-2 border border-red-500/30 bg-[linear-gradient(135deg,#ef4444,#b91c1c)] px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(239,68,68,0.28)] transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-70 dark:border-red-400/30 dark:bg-[linear-gradient(135deg,#f43f5e,#be123c)] dark:shadow-[0_14px_30px_rgba(244,63,94,0.32)]"
                 >
                   <Trash2 size={16} />
                   {deletingAccount
