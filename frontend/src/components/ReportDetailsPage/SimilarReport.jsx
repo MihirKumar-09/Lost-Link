@@ -186,9 +186,7 @@ export default function SimilarReport({ currentReport }) {
         const oppositeType =
           currentReport.reportType === "lost" ? "found" : "lost";
 
-        const res = await fetch(
-          `${API_URL}/reports/allReports?status=open&reportType=${oppositeType}&limit=100`,
-        );
+        const res = await fetch(`${API_URL}/reports/allReports?status=open`);
 
         if (!res.ok) {
           throw new Error("Failed to fetch similar reports");
