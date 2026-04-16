@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", //Local dev
-      "https://lost-link-1.onrender.com/",
+      "https://lost-link-1.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
