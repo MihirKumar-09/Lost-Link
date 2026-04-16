@@ -35,7 +35,7 @@ export default function ReportDetails() {
         <ImageSection productDetails={productDetails} />
         <DetailsSection productDetails={productDetails} />
       </section>
-      <SimilarReport />
+      <SimilarReport currentProducts={productDetails} />
     </>
   );
 }

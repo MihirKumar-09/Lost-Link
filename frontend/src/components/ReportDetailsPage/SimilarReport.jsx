@@ -170,24 +170,60 @@ function DarkMistBackground() {
   );
 }
 
-export default function SimilarReport() {
+export default function SimilarReport({ currentReport }) {
   const [allReports, setAllReport] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_URL}/reports/allReports?status=open`);
-        if (!res.ok) {
-          throw new Error("Failed");
+        if (!currentReport?._id) {
+          setAllReport([]);
+          setLoading(false);
+          return;
         }
+
+        const oppositeType =
+          currentReport.reportType === "lost" ? "found" : "lost";
+
+        const res = await fetch(
+          `${API_URL}/reports/allReports?status=open&reportType=${oppositeType}&limit=100`,
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch similar reports");
+        }
+
         const data = await res.json();
-        setAllReport(data.allReports);
+        setAllReport(data.allReports || []);
       } catch (err) {
-        console.log(err);
+        console.log("Similar reports fetch error:", err);
+        setAllReport([]);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchData();
-  }, []);
+  }, [currentReport]);
+
+  const similarReports = useMemo(() => {
+    if (!currentReport?._id) return [];
+
+    return allReports.filter((report) => {
+      const notCurrentReport = report._id !== currentReport._id;
+
+      const sameCategory =
+        report.category?.trim().toLowerCase() ===
+        currentReport.category?.trim().toLowerCase();
+
+      const sameCity =
+        report.location?.city?.trim().toLowerCase() ===
+        currentReport.location?.city?.trim().toLowerCase();
+
+      return notCurrentReport && sameCategory && sameCity;
+    });
+  }, [allReports, currentReport]);
 
   const containerVariants = {
     hidden: {},
@@ -223,6 +259,10 @@ export default function SimilarReport() {
     },
   };
 
+  if (!currentReport?._id || loading || similarReports.length === 0) {
+    return null;
+  }
+
   return (
     <section className="relative overflow-hidden px-3 py-12 sm:px-5 md:px-12">
       <LightLeafBackground />
@@ -255,13 +295,12 @@ export default function SimilarReport() {
             </h4>
 
             <p className="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-300 md:text-base">
-              People are also looking for similar electronics around your area.
-              Explore recent open reports that might be relevant.
+              Explore recent matching reports from your city.
             </p>
           </div>
 
           <Link
-            to="/reports/all"
+            to={`/reports/${currentReport.reportType === "lost" ? "found" : "lost"}`}
             className="hidden rounded-2xl bg-linear-to-r from-[#3358D4] to-[#5b7cfa] px-5 py-3 text-sm font-semibold text-white shadow-lg dark:from-cyan-500 dark:to-blue-600 md:block"
           >
             <motion.div
@@ -278,7 +317,7 @@ export default function SimilarReport() {
           variants={containerVariants}
           className="flex gap-6 overflow-x-auto pb-3 no-scrollbar"
         >
-          {allReports.map((report) => {
+          {similarReports.map((report) => {
             const reportLink =
               report.reportType === "lost"
                 ? `/lostItem/${report._id}`
@@ -317,14 +356,9 @@ export default function SimilarReport() {
 
                   <motion.span
                     whileHover={{ scale: 1.05 }}
-                    className={cn(
-                      "absolute right-4 top-4 rounded-full px-4 py-1.5 text-xs font-semibold shadow-lg backdrop-blur-md",
-                      report.status === "closed"
-                        ? "bg-gray-700 text-white dark:bg-white/12 dark:text-white"
-                        : "bg-white/90 text-[#3358D4] dark:bg-cyan-400/12 dark:text-cyan-300",
-                    )}
+                    className="absolute right-4 top-4 rounded-full bg-white/90 px-4 py-1.5 text-xs font-semibold text-[#3358D4] shadow-lg backdrop-blur-md dark:bg-cyan-400/12 dark:text-cyan-300"
                   >
-                    {report.status === "closed" ? "Closed" : "Open"}
+                    Open
                   </motion.span>
 
                   <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
