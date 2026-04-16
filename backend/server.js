@@ -21,10 +21,8 @@ const URI = process.env.MONGODB_URI;
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "http://localhost:8080",
-      "http://192.168.1.8:5173",
-      "http://192.168.1.8:8080",
+      "http://localhost:5173", //Local dev
+      "https://lost-link-1.onrender.com/",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,

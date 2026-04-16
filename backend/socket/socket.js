@@ -6,7 +6,8 @@ const userSocketMap = new Map();
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: ["http://localhost:5173", "https://lost-link-1.onrender.com/"],
+
       credentials: true,
     },
   });
