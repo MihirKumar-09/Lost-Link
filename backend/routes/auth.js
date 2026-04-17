@@ -5,7 +5,6 @@ import User from "../models/User.js";
 import isLogin from "../middleware/isLogin.js";
 import Report from "../models/reportSchema.js";
 import cloudinary from "../utils/uploadToCloudinary.js";
-import { API_URL } from "../../frontend/src/lib/api.js";
 
 //! Google SignUp and Login
 // Step 1 -> Login
