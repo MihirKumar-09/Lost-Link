@@ -178,7 +178,9 @@ export default function SimilarReport() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${API_URL}/reports/allReports?status=open`);
+        const res = await fetch(
+          `${API_URL}/reports/allReports?status=open&limit=100`,
+        );
         const data = await res.json();
         setAllReport(Array.isArray(data.allReports) ? data.allReports : []);
       } catch (err) {
@@ -197,32 +199,15 @@ export default function SimilarReport() {
   }, [allReports, id]);
 
   const similarReports = useMemo(() => {
-    if (!currentReport) return [];
-
-    const oppositeType = currentReport.reportType === "lost" ? "found" : "lost";
-
-    return allReports.filter((report) => {
-      if (report._id === currentReport._id) return false;
-      if (report.reportType !== oppositeType) return false;
-
-      const sameCategory =
-        report.category?.trim().toLowerCase() ===
-        currentReport.category?.trim().toLowerCase();
-
-      const sameCity =
-        report.location?.city?.trim().toLowerCase() ===
-        currentReport.location?.city?.trim().toLowerCase();
-
-      return sameCategory && sameCity;
-    });
-  }, [allReports, currentReport]);
+    return allReports.filter((report) => report._id !== id);
+  }, [allReports, id]);
 
   const targetReportType =
     currentReport?.reportType === "lost"
       ? "found"
       : currentReport?.reportType === "found"
         ? "lost"
-        : "found";
+        : "all";
 
   const containerVariants = {
     hidden: {},
@@ -290,12 +275,16 @@ export default function SimilarReport() {
             </h4>
 
             <p className="mt-2 max-w-xl text-sm text-gray-500 dark:text-gray-300 md:text-base">
-              Explore recent matching reports from your city.
+              Explore recent open reports.
             </p>
           </div>
 
           <Link
-            to={`/reports/${targetReportType}`}
+            to={
+              targetReportType === "all"
+                ? "/reports/lost"
+                : `/reports/${targetReportType}`
+            }
             className="hidden rounded-2xl bg-linear-to-r from-[#3358D4] to-[#5b7cfa] px-5 py-3 text-sm font-semibold text-white shadow-lg dark:from-cyan-500 dark:to-blue-600 md:block"
           >
             <motion.div
@@ -312,13 +301,9 @@ export default function SimilarReport() {
           <div className="flex min-h-40 items-center justify-center rounded-3xl border border-dashed border-gray-300/80 bg-white/50 text-sm font-medium text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
             Loading similar reports...
           </div>
-        ) : !currentReport ? (
-          <div className="flex min-h-40 items-center justify-center rounded-3xl border border-dashed border-red-200 bg-red-50/70 text-sm font-medium text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-300">
-            Current report not found from fetched reports.
-          </div>
         ) : similarReports.length === 0 ? (
           <div className="flex min-h-40 items-center justify-center rounded-3xl border border-dashed border-gray-300/80 bg-white/50 text-sm font-medium text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
-            No similar reports found right now.
+            No open reports found right now.
           </div>
         ) : (
           <motion.div
@@ -326,11 +311,6 @@ export default function SimilarReport() {
             className="flex gap-6 overflow-x-auto pb-3 no-scrollbar"
           >
             {similarReports.map((report) => {
-              const reportLink =
-                report.reportType === "lost"
-                  ? `/lostItem/${report._id}`
-                  : `/foundItem/${report._id}`;
-
               return (
                 <motion.div
                   key={report._id}
@@ -413,7 +393,7 @@ export default function SimilarReport() {
 
                       <div className="mb-4 h-px bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-white/12" />
 
-                      <Link to={reportLink}>
+                      <Link to={`/report/${report._id}`}>
                         <motion.div
                           whileHover={{ x: 4 }}
                           whileTap={{ scale: 0.98 }}
