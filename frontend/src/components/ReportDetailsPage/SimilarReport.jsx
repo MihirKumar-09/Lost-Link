@@ -180,7 +180,7 @@ export default function SimilarReport() {
       try {
         const res = await fetch(`${API_URL}/reports/allReports?status=open`);
         const data = await res.json();
-        setAllReport(data.allReports || []);
+        setAllReport(Array.isArray(data.allReports) ? data.allReports : []);
       } catch (err) {
         console.log("Similar reports fetch error:", err);
         setAllReport([]);
@@ -193,12 +193,11 @@ export default function SimilarReport() {
   }, []);
 
   const currentReport = useMemo(() => {
-    if (!id) return null;
     return allReports.find((report) => report._id === id) || null;
   }, [allReports, id]);
 
   const similarReports = useMemo(() => {
-    if (!currentReport?._id) return [];
+    if (!currentReport) return [];
 
     const oppositeType = currentReport.reportType === "lost" ? "found" : "lost";
 
@@ -217,6 +216,13 @@ export default function SimilarReport() {
       return sameCategory && sameCity;
     });
   }, [allReports, currentReport]);
+
+  const targetReportType =
+    currentReport?.reportType === "lost"
+      ? "found"
+      : currentReport?.reportType === "found"
+        ? "lost"
+        : "found";
 
   const containerVariants = {
     hidden: {},
@@ -251,10 +257,6 @@ export default function SimilarReport() {
       },
     },
   };
-
-  if (loading || !currentReport?._id || similarReports.length === 0) {
-    return null;
-  }
 
   return (
     <section className="relative overflow-hidden px-3 py-12 sm:px-5 md:px-12">
@@ -293,7 +295,7 @@ export default function SimilarReport() {
           </div>
 
           <Link
-            to={`/reports/${currentReport.reportType === "lost" ? "found" : "lost"}`}
+            to={`/reports/${targetReportType}`}
             className="hidden rounded-2xl bg-linear-to-r from-[#3358D4] to-[#5b7cfa] px-5 py-3 text-sm font-semibold text-white shadow-lg dark:from-cyan-500 dark:to-blue-600 md:block"
           >
             <motion.div
@@ -306,127 +308,143 @@ export default function SimilarReport() {
           </Link>
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          className="flex gap-6 overflow-x-auto pb-3 no-scrollbar"
-        >
-          {similarReports.map((report) => {
-            const reportLink =
-              report.reportType === "lost"
-                ? `/lostItem/${report._id}`
-                : `/foundItem/${report._id}`;
+        {loading ? (
+          <div className="flex min-h-40 items-center justify-center rounded-3xl border border-dashed border-gray-300/80 bg-white/50 text-sm font-medium text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+            Loading similar reports...
+          </div>
+        ) : !currentReport ? (
+          <div className="flex min-h-40 items-center justify-center rounded-3xl border border-dashed border-red-200 bg-red-50/70 text-sm font-medium text-red-600 dark:border-red-400/20 dark:bg-red-500/10 dark:text-red-300">
+            Current report not found from fetched reports.
+          </div>
+        ) : similarReports.length === 0 ? (
+          <div className="flex min-h-40 items-center justify-center rounded-3xl border border-dashed border-gray-300/80 bg-white/50 text-sm font-medium text-gray-500 dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+            No similar reports found right now.
+          </div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            className="flex gap-6 overflow-x-auto pb-3 no-scrollbar"
+          >
+            {similarReports.map((report) => {
+              const reportLink =
+                report.reportType === "lost"
+                  ? `/lostItem/${report._id}`
+                  : `/foundItem/${report._id}`;
 
-            return (
-              <motion.div
-                key={report._id}
-                variants={cardVariants}
-                whileHover={{ y: -10 }}
-                transition={{ type: "spring", stiffness: 220, damping: 18 }}
-                className="group relative min-w-72.5 shrink-0 overflow-hidden rounded-[28px] border border-white/60 bg-white/90 shadow-[0_14px_35px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-white/10 dark:bg-white/6 sm:min-w-77.5 md:min-w-82.5 lg:min-w-85"
-              >
-                <div className="relative h-60 overflow-hidden bg-linear-to-br from-[#f2f6ff] to-[#dde7ff] dark:from-slate-900 dark:to-[#0f1d35]">
-                  <motion.img
-                    src={report.image}
-                    alt={report.name || "Report"}
-                    className="h-full w-full object-cover"
-                    whileHover={{ scale: 1.08 }}
-                    transition={{ duration: 0.55, ease: "easeOut" }}
-                  />
+              return (
+                <motion.div
+                  key={report._id}
+                  variants={cardVariants}
+                  whileHover={{ y: -10 }}
+                  transition={{ type: "spring", stiffness: 220, damping: 18 }}
+                  className="group relative min-w-72.5 shrink-0 overflow-hidden rounded-[28px] border border-white/60 bg-white/90 shadow-[0_14px_35px_rgba(15,23,42,0.08)] backdrop-blur-md dark:border-white/10 dark:bg-white/6 sm:min-w-77.5 md:min-w-82.5 lg:min-w-85"
+                >
+                  <div className="relative h-60 overflow-hidden bg-linear-to-br from-[#f2f6ff] to-[#dde7ff] dark:from-slate-900 dark:to-[#0f1d35]">
+                    <motion.img
+                      src={report.image}
+                      alt={report.name || "Report"}
+                      className="h-full w-full object-cover"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.55, ease: "easeOut" }}
+                    />
 
-                  <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/15 to-transparent dark:from-black/75 dark:via-slate-950/18 dark:to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/65 via-black/15 to-transparent dark:from-black/75 dark:via-slate-950/18 dark:to-transparent" />
 
-                  <motion.span
-                    whileHover={{ scale: 1.05 }}
-                    className={cn(
-                      "absolute left-4 top-4 rounded-full px-4 py-1.5 text-xs font-semibold shadow-lg backdrop-blur-md",
-                      report.reportType === "lost"
-                        ? "bg-red-500 text-white"
-                        : "bg-emerald-500 text-white",
-                    )}
-                  >
-                    {report.reportType === "lost" ? "Lost Item" : "Found Item"}
-                  </motion.span>
-
-                  <motion.span
-                    whileHover={{ scale: 1.05 }}
-                    className="absolute right-4 top-4 rounded-full bg-white/90 px-4 py-1.5 text-xs font-semibold text-[#3358D4] shadow-lg backdrop-blur-md dark:bg-cyan-400/12 dark:text-cyan-300"
-                  >
-                    Open
-                  </motion.span>
-
-                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                    <motion.h6
-                      whileHover={{ x: 3 }}
-                      className="text-xl font-bold leading-tight"
+                    <motion.span
+                      whileHover={{ scale: 1.05 }}
+                      className={cn(
+                        "absolute left-4 top-4 rounded-full px-4 py-1.5 text-xs font-semibold shadow-lg backdrop-blur-md",
+                        report.reportType === "lost"
+                          ? "bg-red-500 text-white"
+                          : "bg-emerald-500 text-white",
+                      )}
                     >
-                      {report.name}
-                    </motion.h6>
+                      {report.reportType === "lost"
+                        ? "Lost Item"
+                        : "Found Item"}
+                    </motion.span>
 
-                    <div className="mt-2 flex items-center gap-2 text-sm text-white/90">
-                      <MapPin size={16} />
-                      <span>
-                        {report.location?.city}, {report.location?.area}
-                      </span>
+                    <motion.span
+                      whileHover={{ scale: 1.05 }}
+                      className="absolute right-4 top-4 rounded-full bg-white/90 px-4 py-1.5 text-xs font-semibold text-[#3358D4] shadow-lg backdrop-blur-md dark:bg-cyan-400/12 dark:text-cyan-300"
+                    >
+                      Open
+                    </motion.span>
+
+                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                      <motion.h6
+                        whileHover={{ x: 3 }}
+                        className="text-xl font-bold leading-tight"
+                      >
+                        {report.name}
+                      </motion.h6>
+
+                      <div className="mt-2 flex items-center gap-2 text-sm text-white/90">
+                        <MapPin size={16} />
+                        <span>
+                          {report.location?.city}, {report.location?.area}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="relative p-5">
-                  <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 -translate-y-1/2 rounded-full bg-blue-100/40 blur-2xl dark:bg-cyan-400/10" />
+                  <div className="relative p-5">
+                    <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 -translate-y-1/2 rounded-full bg-blue-100/40 blur-2xl dark:bg-cyan-400/10" />
 
-                  <div className="relative z-10">
-                    <div className="mb-4 flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
-                        <Clock3 size={15} />
-                        <span>
-                          {new Date(report.dateTime).toLocaleTimeString(
-                            "en-IN",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            },
-                          )}
+                    <div className="relative z-10">
+                      <div className="mb-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-300">
+                          <Clock3 size={15} />
+                          <span>
+                            {new Date(report.dateTime).toLocaleTimeString(
+                              "en-IN",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              },
+                            )}
+                          </span>
+                        </div>
+
+                        <span className="text-sm font-medium text-gray-400 dark:text-gray-500">
+                          {new Date(report.dateTime).getFullYear()}
                         </span>
                       </div>
 
-                      <span className="text-sm font-medium text-gray-400 dark:text-gray-500">
-                        {new Date(report.dateTime).getFullYear()}
-                      </span>
-                    </div>
+                      <div className="mb-4 h-px bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-white/12" />
 
-                    <div className="mb-4 h-px bg-linear-to-r from-transparent via-gray-300 to-transparent dark:via-white/12" />
-
-                    <Link to={reportLink}>
-                      <motion.div
-                        whileHover={{ x: 4 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="flex items-center justify-between rounded-2xl border border-[#dbe4ff] bg-[#f7faff] px-4 py-3 transition hover:bg-[#eef4ff] dark:border-white/10 dark:bg-white/8 dark:hover:bg-white/12"
-                      >
-                        <span className="text-sm font-semibold text-[#3358D4] dark:text-cyan-300">
-                          View Details
-                        </span>
-
+                      <Link to={reportLink}>
                         <motion.div
-                          animate={{ x: [0, 4, 0] }}
-                          transition={{
-                            duration: 1.4,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                          }}
-                          className="text-[#3358D4] dark:text-cyan-300"
+                          whileHover={{ x: 4 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="flex items-center justify-between rounded-2xl border border-[#dbe4ff] bg-[#f7faff] px-4 py-3 transition hover:bg-[#eef4ff] dark:border-white/10 dark:bg-white/8 dark:hover:bg-white/12"
                         >
-                          <MoveRight size={18} />
-                        </motion.div>
-                      </motion.div>
-                    </Link>
-                  </div>
-                </div>
+                          <span className="text-sm font-semibold text-[#3358D4] dark:text-cyan-300">
+                            View Details
+                          </span>
 
-                <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-transparent transition duration-300 group-hover:ring-[#3358D4]/20 dark:group-hover:ring-cyan-400/20" />
-              </motion.div>
-            );
-          })}
-        </motion.div>
+                          <motion.div
+                            animate={{ x: [0, 4, 0] }}
+                            transition={{
+                              duration: 1.4,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            }}
+                            className="text-[#3358D4] dark:text-cyan-300"
+                          >
+                            <MoveRight size={18} />
+                          </motion.div>
+                        </motion.div>
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="pointer-events-none absolute inset-0 rounded-[28px] ring-1 ring-transparent transition duration-300 group-hover:ring-[#3358D4]/20 dark:group-hover:ring-cyan-400/20" />
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
       </motion.div>
     </section>
   );
